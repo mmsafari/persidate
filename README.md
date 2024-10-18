@@ -49,7 +49,7 @@ jalaliMonths,
 jalaliDays,
 todaysDate,
 formatDateString,
-toJalaliMonthIndex,xs
+toJalaliMonthIndex,
 toJalaliMonthIndexReverse,
 getFullTime,
 toFullJalaliWithPersianMonth,
