@@ -1,15 +1,29 @@
 {
-  "name": "date-convertor",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5"
-  }
+	"name": "persidate",
+	"version": "1.0.2",
+	"description": "ShamsiTools is a lightweight package for converting and managing Shamsi (Jalali) and Gregorian dates in JavaScript/TypeScript.",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mmsafari/date-converter.git"
+	},
+	"author": "mmsafari",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/mmsafari/date-converter/issues"
+	},
+	"homepage": "https://github.com/mmsafari/date-converter#readme",
+	"keywords": [
+		"shamsi",
+		"jalali",
+		"date",
+		"date-conversion",
+		"javascript",
+		"typescript",
+		"calendar",
+		"persian"
+	]
 }
