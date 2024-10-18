@@ -419,7 +419,7 @@ const toJalaliMonth = (date: Date): string => {
  * @returns {string} Jalali date in the format YYYY-MM-DD.
  */
 const toJalaliDate = (date: Date): string => {
-	const parts = parseArabic(date.toLocaleDateString("fa-IR")).split("/");
+	const parts = parseArabic(date.toLocaleDateString("fa-IR")).split("-");
 	return `${parts[0]}-${parts[1]}-${parts[2]}`;
 };
 
