@@ -484,9 +484,7 @@ const toJalaliByDetails = (
  * @param {string} data - Desired date as a string in the format MM/DD/YYYY HH:mm:ss.
  * @returns {number} Number of days between the two dates.
  */
-const distanceBetweenTheCurrentDateAndTheDesiredDate = (
-	data: string
-): number => {
+const distanceDate = (data: string): number => {
 	function parseDate(dateString: any) {
 		const [datePart, timePart] = dateString.split(" ");
 		const [month, day, year] = datePart.split("/");
@@ -528,5 +526,5 @@ export {
 	toJalaliWithPersianMonthAndDay,
 	toJalaliWithPersianMonthAndPersianDay,
 	toJalaliByDetails,
-	distanceBetweenTheCurrentDateAndTheDesiredDate,
+	distanceDate,
 };
