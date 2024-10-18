@@ -1,6 +1,6 @@
 {
 	"name": "persidate",
-	"version": "1.0.2",
+	"version": "1.1.0",
 	"description": "ShamsiTools is a lightweight package for converting and managing Shamsi (Jalali) and Gregorian dates in JavaScript/TypeScript.",
 	"main": "index.js",
 	"scripts": {
