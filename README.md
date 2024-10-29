@@ -2,20 +2,10 @@
 
 `persidate` is a lightweight JavaScript/TypeScript package for converting and managing Shamsi (Jalali) and Gregorian dates. This package provides a simple interface to handle date conversions and formatting.
 
-## Installation
-
-You can install `persidate` via npm:
-
-```bash
-npm install persidate
-``` 
-
 ## Usage
 `Here's a simple example of how to use persidate in your project:`
 
 ```javascript
-
-import { toJalaliDate, toGregorianDate, toFullJalaliWithPersianMonth } from 'persidate';
 
 // Convert Gregorian date to Shamsi
 const shamsiDate = toJalaliDate('2024-10-18');
