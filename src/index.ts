@@ -63,7 +63,7 @@ export const addDays = (date: Date, days: number): Date => {
  * @param {number} day - Jalali day.
  * @returns {Date} Gregorian date.
  */
-export const toGregorianDate = (
+export const jalaliToGregorianDate = (
 	year: number,
 	month: number,
 	day: number
