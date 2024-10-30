@@ -5,6 +5,12 @@ declare global {
 	}
 }
 
+/**
+ * Locale setting for Persian (Iran) format.
+ * @constant {string} locale - Locale code for Persian (Iran).
+ */
+const locale = "fa-IR";
+
 // Extending Date prototype
 const DT: any = Date.prototype;
 
@@ -63,12 +69,12 @@ export const addDays = (date: Date, days: number): Date => {
  * @param {number} day - Jalali day.
  * @returns {Date} Gregorian date.
  */
-export const jalaliToGregorianDate = (
+export const toGregorianDate = (
 	year: number,
 	month: number,
 	day: number
 ): Date => {
-	const date = jalaliToGregorian(year, month, day);
+	const date = toGregorian(year, month, day);
 	return new Date(date[0], date[1] - 1, date[2]); // month is 0-indexed in JavaScript
 };
 
@@ -79,12 +85,12 @@ export const jalaliToGregorianDate = (
  * @param {number} day - Jalali day.
  * @returns {string} Gregorian date string.
  */
-export const jalaliToFullGregorianDateString = (
+export const toFullGregorianDateString = (
 	year: number,
 	month: number,
 	day: number
 ): string => {
-	const date = jalaliToGregorian(year, month, day);
+	const date = toGregorian(year, month, day);
 	return `${date[0]}/${date[1]}/${date[2]}`;
 };
 
@@ -96,13 +102,13 @@ export const jalaliToFullGregorianDateString = (
  * @param {number} time - Time in the format HH:mm.
  * @returns {string} Gregorian date string with time in the format YYYY-MM-DDTHH:mm.
  */
-export const jalaliToFullGregorianDateTime = (
+export const toFullGregorianDateTime = (
 	year: number,
 	month: number,
 	day: number,
 	time: string
 ): string => {
-	const date = jalaliToGregorian(year, month, day);
+	const date = toGregorian(year, month, day);
 	return `${date[0]}-${("0" + date[1]).slice(-2)}-${("0" + date[2]).slice(
 		-2
 	)}T${time}`;
@@ -115,7 +121,7 @@ export const jalaliToFullGregorianDateTime = (
  */
 export const getJalaliYear = (dateString: string): string => {
 	const date = new Date(dateString);
-	const parts = parseArabic(date.toLocaleDateString("fa-IR")).split("/");
+	const parts = parseArabic(date.toLocaleDateString(locale)).split("/");
 	return parts[0];
 };
 
@@ -126,7 +132,7 @@ export const getJalaliYear = (dateString: string): string => {
  */
 export const toJalaliFullDate = (dateString: string): string => {
 	const date = new Date(dateString);
-	return parseArabic(date.toLocaleDateString("fa-IR"));
+	return parseArabic(date.toLocaleDateString(locale));
 };
 
 /**
@@ -199,7 +205,7 @@ export const jalaliDays: string[] = [
  * @param {number} jd - Jalali day.
  * @returns {[number, number, number]} Gregorian year, month, and day.
  */
-export const jalaliToGregorian = (
+export const toGregorian = (
 	jy: number,
 	jm: number,
 	jd: number
@@ -254,6 +260,10 @@ export const jalaliToGregorian = (
 	return [gy, gm, gd];
 };
 
+/**
+ * Gets today's date in ISO format (YYYY-MM-DD).
+ * @returns {string} Today's date in "YYYY-MM-DD" format.
+ */
 export const todaysDate = () => {
 	const date = new Date().toISOString();
 	const splitDate = date.split("T")[0];
@@ -388,7 +398,7 @@ export const getFullTime = (timeString: string): string => {
  */
 export const toFullJalaliWithPersianMonth = (dateString: string): string => {
 	const date = new Date(dateString);
-	const parts: any = parseArabic(date.toLocaleDateString("fa-IR")).split("/");
+	const parts: any = parseArabic(date.toLocaleDateString(locale)).split("/");
 	return `${parts[2]} ${jalaliMonths[parts[1] - 1]} ${parts[0]}`;
 };
 
@@ -408,7 +418,7 @@ export const toJalaliDay = (dateString: string): string => {
  * @returns {string} Jalali day number.
  */
 export const toJalaliDayNumber = (date: Date): string => {
-	const parts = parseArabic(date.toLocaleDateString("fa-IR")).split("/");
+	const parts = parseArabic(date.toLocaleDateString(locale)).split("/");
 	return `${parts[2]}`;
 };
 
@@ -419,9 +429,7 @@ export const toJalaliDayNumber = (date: Date): string => {
  */
 export const toJalaliMonth = (date: Date | string): string => {
 	const dateObj = date as Date;
-	const parts: any = parseArabic(dateObj.toLocaleDateString("fa-IR")).split(
-		"/"
-	);
+	const parts: any = parseArabic(dateObj.toLocaleDateString(locale)).split("/");
 	return `${jalaliMonths[parseInt(parts[1], 10) - 1]}`;
 };
 
@@ -432,7 +440,7 @@ export const toJalaliMonth = (date: Date | string): string => {
  */
 export const toJalaliDate = (date: Date | string): string => {
 	const dateObj = date as Date;
-	const parts = parseArabic(dateObj.toLocaleDateString("fa-IR")).split("/");
+	const parts = parseArabic(dateObj.toLocaleDateString(locale)).split("/");
 	return `${parts[0]}-${parts[1]}-${parts[2]}`;
 };
 
@@ -443,7 +451,7 @@ export const toJalaliDate = (date: Date | string): string => {
  */
 export const toJalaliDateWithFormat = (date: Date | string): string => {
 	const dateObj = date as Date;
-	const parts = parseArabic(dateObj.toLocaleDateString("fa-IR")).split("/");
+	const parts = parseArabic(dateObj.toLocaleDateString(locale)).split("/");
 	let month = parts[1]?.length < 2 ? `0${parts[1]}` : parts[1];
 	let day = parts[2]?.length < 2 ? `0${parts[2]}` : parts[2];
 
@@ -457,7 +465,7 @@ export const toJalaliDateWithFormat = (date: Date | string): string => {
  */
 export const toJalaliWithPersianMonthAndDay = (dateString: string): string => {
 	const date = new Date(dateString);
-	const parts: any = parseArabic(date.toLocaleDateString("fa-IR")).split("/");
+	const parts: any = parseArabic(date.toLocaleDateString(locale)).split("/");
 	return `${parts[2]} ${jalaliMonths[parts[1] - 1]}`;
 };
 
@@ -470,7 +478,7 @@ export const toJalaliWithPersianMonthAndPersianDay = (
 	dateString: string
 ): string => {
 	const date = new Date(dateString);
-	const parts: any = parseArabic(date.toLocaleDateString("fa-IR")).split("/");
+	const parts: any = parseArabic(date.toLocaleDateString(locale)).split("/");
 	return `${jalaliDays[date.getDay()]} ${parts[2]} ${
 		jalaliMonths[parts[1] - 1]
 	}`;
@@ -488,7 +496,7 @@ export const toJalaliByDetails = (
 	month: number,
 	day: number
 ): string => {
-	const date = new Date(year, month, day).toLocaleDateString("fa-IR");
+	const date = new Date(year, month, day).toLocaleDateString(locale);
 	return date;
 };
 
