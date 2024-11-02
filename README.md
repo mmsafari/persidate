@@ -8,15 +8,15 @@
 ```javascript
 
 // Convert Gregorian date to Shamsi
-const shamsiDate = toJalaliDate('2024-10-18');
+const shamsiDate = formatJalaliDate('2024-10-18');
 console.log(shamsiDate); // Output: 1403-7-26 
 
 // Convert Shamsi date to Gregorian
-const miladiDate = toGregorianDate(1403, 7, 26);
+const miladiDate = convertToGregorianDate(1403, 7, 26);
 console.log(miladiDate); // Output: 2024-10-18
 
 // Format a date to Shamsi with Persian month
-const formattedShamsi = toFullJalaliWithPersianMonth('2024-10-18');
+const formattedShamsi = formatJalaliWithPersianMonth('2024-10-18');
 console.log(formattedShamsi); // Output: 26 مهر 1403
 ```
 ### Functions
@@ -37,7 +37,7 @@ convertToJalaliWithPersianMonthAndDay,
 convertToJalaliMonth,          
 convertToJalaliMonth,          
 formatJalaliDate, 
-formatJalaliDateWithPadding,   
+formatJalaliDateWithPadding,
 getPersianMonthAndDayJalali,   
 getDetailedJalaliDate,         
 isDateBefore,                
