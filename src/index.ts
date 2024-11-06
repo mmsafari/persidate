@@ -173,7 +173,9 @@ export const getJalaliDayNumber = (date: Date): string => {
  */
 export const convertToJalaliMonth = (date: Date | string): string => {
 	const formattedDate = typeof date === "string" ? new Date(date) : date;
-	const parts: any = parseArabic(formattedDate.toLocaleDateString(locale)).split("/");
+	const parts: any = parseArabic(
+		formattedDate.toLocaleDateString(locale)
+	).split("/");
 	return `${persianJalaliMonths[parseInt(parts[1], 10) - 1]}`;
 };
 
@@ -184,7 +186,9 @@ export const convertToJalaliMonth = (date: Date | string): string => {
  */
 export const formatJalaliDate = (date: Date | string): string => {
 	const formattedDate = typeof date === "string" ? new Date(date) : date;
-	const parts = parseArabic(formattedDate.toLocaleDateString("fa-IR")).split("/");
+	const parts = parseArabic(formattedDate.toLocaleDateString("fa-IR")).split(
+		"/"
+	);
 	return `${parts[0]}-${parts[1]}-${parts[2]}`;
 };
 
@@ -195,7 +199,9 @@ export const formatJalaliDate = (date: Date | string): string => {
  */
 export const formatJalaliDateWithPadding = (date: Date | string): string => {
 	const formattedDate = typeof date === "string" ? new Date(date) : date;
-	const parts = parseArabic(formattedDate.toLocaleDateString(locale)).split("/");
+	const parts = parseArabic(formattedDate.toLocaleDateString(locale)).split(
+		"/"
+	);
 	let month = parts[1]?.length < 2 ? `0${parts[1]}` : parts[1];
 	let day = parts[2]?.length < 2 ? `0${parts[2]}` : parts[2];
 
@@ -367,7 +373,7 @@ export const toGregorian = (
  * Gets today's date in ISO format (YYYY-MM-DD).
  * @returns {string} Today's date in "YYYY-MM-DD" format.
  */
-export const getTodayDate = () => {
+export const getTodayDate = (): string => {
 	const date = new Date().toISOString();
 	const splitDate = date.split("T")[0];
 	return splitDate;
@@ -472,4 +478,3 @@ export const jalaliWeekDays: string[] = [
 	"جمعه",
 	"شنبه",
 ];
-
