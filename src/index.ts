@@ -126,16 +126,6 @@ export const getJalaliYear = (dateString: string): string => {
 };
 
 /**
- * Converts Gregorian date string to Jalali (jalali) date.
- * @param {string} dateString - Gregorian date string.
- * @returns {string} Jalali date string.
- */
-export const convertToFullJalaliDate = (dateString: string): string => {
-	const date = new Date(dateString);
-	return parseArabic(date.toLocaleDateString(locale));
-};
-
-/**
  * Converts a Gregorian date string to full Jalali (jalali) date with Persian month names.
  * @param {string} dateString - Gregorian date string.
  * @returns {string} Full Jalali date with Persian month names.
