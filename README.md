@@ -19,10 +19,6 @@ console.log(miladiDate); // Output: Date Wed Nov 06 2024 00:00:00 GMT+0330 (Iran
 const miladiDate = formatFullGregorianDate(1403, 8, 16)
 console.log(miladiDate); // Output: 2024/11/6
 
-// Convert Shamsi date to Gregorian
-const miladiDate = convertToGregorianDate(1403, 8, 16)
-console.log(miladiDate); // Output: Date Wed Nov 06 2024 00:00:00 GMT+0330 (Iran Standard Time)
-
 // Format a date to Shamsi with Persian month
 const formattedShamsi = formatJalaliWithPersianMonth('2024-10-18');
 console.log(formattedShamsi); // Output: 26 مهر 1403
