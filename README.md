@@ -1,6 +1,15 @@
 # persidate
+[![NPM Version](https://img.shields.io/npm/v/persidate)](https://www.npmjs.com/package/persidate)
 
 `persidate` is a lightweight JavaScript/TypeScript package for converting and managing Shamsi (Jalali) and Gregorian dates. This package provides a simple interface to handle date conversions and formatting.
+
+## Installation
+
+You can install `persidate` via npm:
+
+```bash
+npm install persidate
+``` 
 
 ## Usage
 `Here's a simple example of how to use persidate in your project:`
