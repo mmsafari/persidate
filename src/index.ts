@@ -29,7 +29,7 @@ export const convertToISOStandardDateTime = (date: Date): string => {
 
 /**
  * Converts date to ISO format with a timezone offset adjustment.
- * @param {Date} date - The input date.
+ * @param {Date | string} date - The input date.
  * @returns {string} Adjusted ISO date string.
  */
 export const convertToISOStandard = (date: Date | string): string => {
@@ -76,6 +76,19 @@ export const convertToGregorianDate = (
 ): Date => {
 	const date = toGregorian(year, month, day);
 	return new Date(date[0], date[1] - 1, date[2]); // month is 0-indexed in JavaScript
+};
+
+/**
+ * Converts a given timestamp or Date object to a Gregorian date string in the format YYYY-MM-DD.
+ * @param {number | Date} date - Unix timestamp or Date object.
+ * @returns {string} Gregorian date string in the format YYYY-MM-DD.
+ */
+export const formatGregorianDate = (date: number | Date): string => {
+	const formattedDate = typeof date === "number" ? new Date(date) : date;
+	const year = formattedDate.getFullYear();
+	const month = formattedDate.getMonth() + 1;
+	const day = formattedDate.getDate();
+	return `${year}-${month.toString()}-${day.toString()}`;
 };
 
 /**
@@ -158,7 +171,7 @@ export const getJalaliDayNumber = (date: Date): string => {
 
 /**
  * Converts a Gregorian date to the Jalali month in Persian.
- * @param {Date} date - Gregorian date object.
+ * @param {Date | string} date - Gregorian date object.
  * @returns {string} Jalali month in Persian.
  */
 export const convertToJalaliMonth = (date: Date | string): string => {
@@ -171,20 +184,21 @@ export const convertToJalaliMonth = (date: Date | string): string => {
 
 /**
  * Converts a Gregorian date to a formatted Jalali (jalali) date.
- * @param {Date} date - Gregorian date object.
+ * @param {Date | string | number} date - Gregorian date object.
  * @returns {string} Jalali date in the format YYYY-MM-DD.
  */
-export const formatJalaliDate = (date: Date | string): string => {
-	const formattedDate = typeof date === "string" ? new Date(date) : date;
-	const parts = parseArabic(formattedDate.toLocaleDateString("fa-IR")).split(
-		"/"
-	);
+export const formatJalaliDate = (date: Date | string | number): string => {
+	const parsedDate =
+		typeof date === "number" || typeof date === "string"
+			? new Date(date)
+			: date;
+	const parts = parseArabic(parsedDate.toLocaleDateString("fa-IR")).split("/");
 	return `${parts[0]}-${parts[1]}-${parts[2]}`;
 };
 
 /**
  * Converts a Gregorian date to a formatted Jalali date with padded month and day.
- * @param {Date} date - Gregorian date object.
+ * @param {Date | string} date - Gregorian date object.
  * @returns {string} Jalali date in the format YYYY-MM-DD with zero-padded month and day.
  */
 export const formatJalaliDateWithPadding = (date: Date | string): string => {
