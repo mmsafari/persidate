@@ -55,6 +55,8 @@ yarn add persidate
 
 	• addDaysToDate
 	• isBeforeDate
+	• isValidDate
+	• isLeapYearJalali
 
 ### Constants
 
@@ -177,6 +179,13 @@ console.log(plusTen);
 const date1 = '2024-10-18';
 const date2 = '2025-01-01';
 console.log(isBeforeDate(date1, date2)); // true
+
+// Check if the given date is valid
+const date = new Date();
+console.log(isValidDate(date)); // true
+
+// Check if the given Jalali year is a leap year
+console.log(isLeapYearJalali(1403)); // true
 ```
 
 ## Contributors

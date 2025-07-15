@@ -176,7 +176,7 @@ export const formatToGregorianDateTime = (
 export const formatToJalaliDatePadded = (date: Date | string): string => {
 	const formattedDate = typeof date === "string" ? new Date(date) : date;
 	const parts = parseArabic(formattedDate.toLocaleDateString(locale)).split(
-		"/"
+		/[/-]/
 	);
 	let month = parts[1]?.length < 2 ? `0${parts[1]}` : parts[1];
 	let day = parts[2]?.length < 2 ? `0${parts[2]}` : parts[2];
@@ -257,7 +257,7 @@ export const formatToLocalizedDate = (
  */
 export const getJalaliYear = (dateString: string): string => {
 	const date = new Date(dateString);
-	const parts = parseArabic(date.toLocaleDateString(locale)).split("/");
+	const parts = parseArabic(date.toLocaleDateString(locale)).split(/[-\/]/);
 	return parts[0];
 };
 
@@ -420,6 +420,25 @@ export const isBeforeDate = (first: string, second: string): boolean => {
 	const firstTime = new Date(first).getTime();
 	const secondTime = new Date(second).getTime();
 	return firstTime < secondTime;
+};
+
+/**
+ * Check if the given date is valid.
+ * @param {Date} date - Date to check.
+ * @returns {boolean} True if the date is valid.
+ */
+export const isValidDate = (date: Date): boolean => {
+	return date instanceof Date && !isNaN(date.getTime());
+};
+
+/**
+ * Check if the given Jalali year is a leap year.
+ * @param {number} jalaliYear - Jalali year.
+ * @returns {boolean} True if the Jalali year is a leap year.
+ */
+export const isLeapYearJalali = (jalaliYear: number): boolean => {
+	const [gy] = toGregorian(jalaliYear, 1, 1);
+	return (gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0;
 };
 
 // Define arrays for Jalali months and days
