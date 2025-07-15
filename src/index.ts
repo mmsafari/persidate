@@ -66,73 +66,72 @@ export const convertToGregorianDateString = (jalaliDate: string): string => {
 };
 
 /**
- * Converts a Gregorian date to a formatted Jalali (jalali) date.
- * @param {Date | string | number} date - Gregorian date object.
- * @returns {string} Jalali date in the format YYYY-MM-DD.
- */
-export const convertToJalaliDate = (date: Date | string | number): string => {
-	const parsedDate =
-		typeof date === "number" || typeof date === "string"
-			? new Date(date)
-			: date;
-	const parts = parseArabic(parsedDate.toLocaleDateString("fa-IR")).split("/");
-	return `${parts[0]}-${parts[1]}-${parts[2]}`;
-};
-
-/**
- * Converts a Gregorian date string to a formatted Jalali date string with Persian names.
+ * Converts a Gregorian date to a Jalali date in a specified format.
  *
- * @param {string} dateString - The Gregorian date string (e.g. "2024-10-18").
- * @param { "day" | "weekday" | "month | "dayMonth" | "dayMonthYear" | "weekdayDayMonth" | "weekdayDayMonthYear"} [format="dayMonthYear"] -
- *   The desired output format:
- *   - "day": Returns day (e.g. "26").
- *   - "weekday": Returns weekday (e.g. "جمعه").
- *   - "month": Returns month (e.g. "مهر").
- *   - "dayMonth": Returns day and month (e.g. "26 مهر").
- *   - "dayMonthYear": Returns day, month, and year (e.g. "26 مهر 1403").
- *   - "weekdayDayMonth": Returns weekday, day, and month (e.g. "جمعه 26 مهر").
- *   - "weekdayDayMonthYear": Returns weekday, day, month, and year (e.g. "جمعه 26 مهر 1403").
+ * @param {Date | string | number} date - The Gregorian date input.
+ * @param { "day" | "weekday" | "month" | "dayMonth" | "dayMonthYear" | "weekdayDayMonth" | "weekdayDayMonthYear" } [format] -
+ *   Optional format for the output:
+ *   - If omitted, returns "YYYY-MM-DD"
+ *   - "day": Returns day (e.g. "26")
+ *   - "weekday": Returns weekday (e.g. "جمعه")
+ *   - "month": Returns month (e.g. "مهر")
+ *   - "dayMonth": Returns day and month (e.g. "26 مهر")
+ *   - "dayMonthYear": Returns full date (e.g. "26 مهر 1403")
+ *   - "weekdayDayMonth": Returns weekday + day + month (e.g. "جمعه 26 مهر")
+ *   - "weekdayDayMonthYear": Full format (e.g. "جمعه 26 مهر 1403")
  *
- * @returns {string} Formatted Jalali date string.
+ * @returns {string} Jalali date in desired format or "YYYY-MM-DD" by default.
+ *
+ * @example
+ * convertToJalaliDate("2024-10-18"); // → "1403-07-27"
+ * convertToJalaliDate("2024-10-18", "dayMonthYear"); // → "27 مهر 1403"
+ * convertToJalaliDate(new Date(), "weekday"); // → "دوشنبه"
  */
-export const convertToJalaliWithOptions = (
-	dateString: string,
-	format:
+export const convertToJalaliDate = (
+	date: Date | string | number,
+	format?:
 		| "day"
 		| "weekday"
 		| "month"
 		| "dayMonth"
 		| "dayMonthYear"
 		| "weekdayDayMonth"
-		| "weekdayDayMonthYear" = "dayMonthYear"
+		| "weekdayDayMonthYear"
 ): string => {
-	const date = new Date(dateString);
-	const parts: any = parseArabic(date.toLocaleDateString(locale)).split("/");
-	const year = parts[0];
-	const month = parts[1];
-	const day = parts[2];
+	const parsedDate =
+		typeof date === "number" || typeof date === "string"
+			? new Date(date)
+			: date;
+
+	const parts: any = parseArabic(parsedDate.toLocaleDateString("fa-IR")).split(
+		/[-\/]/
+	);
+	const [year, month, day] = parts;
+	const weekday = jalaliWeekdayNames[parsedDate.getDay()];
+	const persianMonth = jalaliMonthNames[month - 1];
+
+	// Default fallback: YYYY-MM-DD
+	if (!format) {
+		return `${year}-${month}-${day}`;
+	}
 
 	switch (format) {
 		case "day":
 			return `${day}`;
 		case "weekday":
-			return `${jalaliWeekdayNames[date.getDay()]}`;
+			return `${weekday}`;
 		case "month":
-			return `${jalaliMonthNames[month - 1]}`;
+			return `${persianMonth}`;
 		case "dayMonth":
-			return `${day} ${jalaliMonthNames[month - 1]}`;
+			return `${day} ${persianMonth}`;
 		case "dayMonthYear":
-			return `${day} ${jalaliMonthNames[month - 1]} ${year}`;
+			return `${day} ${persianMonth} ${year}`;
 		case "weekdayDayMonth":
-			return `${jalaliWeekdayNames[date.getDay()]} ${day} ${
-				jalaliMonthNames[month - 1]
-			}`;
+			return `${weekday} ${day} ${persianMonth}`;
 		case "weekdayDayMonthYear":
-			return `${jalaliWeekdayNames[date.getDay()]} ${day} ${
-				jalaliMonthNames[month - 1]
-			} ${year}`;
+			return `${weekday} ${day} ${persianMonth} ${year}`;
 		default:
-			return `${day} ${jalaliMonthNames[month - 1]} ${year}`;
+			return `${year}-${month}-${day}`;
 	}
 };
 
@@ -207,16 +206,16 @@ export const formatToLocalizedDate = (
 		return formatToJalaliDatePadded(date);
 	}
 	if (format === "jMMMM") {
-		return convertToJalaliWithOptions(date, "month");
+		return convertToJalaliDate(date, "month");
 	}
 	if (format === "jD") {
-		return convertToJalaliWithOptions(date, "day");
+		return convertToJalaliDate(date, "day");
 	}
 	if (format === "jDDD") {
-		return convertToJalaliWithOptions(date, "dayMonth");
+		return convertToJalaliDate(date, "dayMonth");
 	}
 	if (format === "jDDD-jMM-jYY") {
-		return convertToJalaliWithOptions(date, "dayMonthYear");
+		return convertToJalaliDate(date, "dayMonthYear");
 	}
 	if (typeof date === "string") {
 		if (date.includes("/")) date = date.replace(/\//g, "-");

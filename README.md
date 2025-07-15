@@ -1,198 +1,184 @@
-# persidate
-[![NPM Version](https://img.shields.io/npm/v/persidate)](https://www.npmjs.com/package/persidate)
+# 📅 persidate
 
-`persidate` is a lightweight JavaScript/TypeScript library designed for converting and managing Shamsi (Jalali) and Gregorian dates. It provides a clean and simple API for handling date conversions, formatting, and utility functions.
+[![Version](https://img.shields.io/npm/v/persidate?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/persidate)
+[![Build Size](https://img.shields.io/bundlephobia/minzip/persidate?label=bundle%20size&style=flat&colorA=000000&colorB=000000)](https://bundlephobia.com/result?p=persidate)
+[![Downloads](https://img.shields.io/npm/dt/persidate.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/persidate)
 
-## Installation
+**`persidate`** is a lightweight JavaScript/TypeScript library designed for converting and managing Shamsi (Jalali) and Gregorian dates. It provides a clean and simple API for handling date conversions, formatting, and utility functions.
 
-Install `persidate` using npm:
+---
+
+## 🚀 Installation
+
+Using npm:
 ```bash
 npm install persidate
 ```
-Install `persidate` using yarn:
+
+Using yarn:
 ```bash
 yarn add persidate
 ```
+
+---
 
 ## Available Functions
 
 ### Convert
 
-	•	convertToStandardDateTime
-	•	convertToISODateTime
-	•	convertToGregorianDate
-	•	convertToGregorianDateString
-	•	convertToJalaliDate
-	•	convertToJalaliWithOptions
+	• convertToStandardDateTime
+	• convertToISODateTime
+	• convertToGregorianDate
+	• convertToGregorianDateString
+	• convertToJalaliDate
 
 ### Format
 
-	•	formatToGregorianDate
-	•	formatToGregorianDateTime
-	•	formatToJalaliDatePadded
-	•	formatToLocalizedDate
+	• formatToGregorianDate
+	• formatToGregorianDateTime
+	• formatToJalaliDatePadded
+	• formatToLocalizedDate
 
 ### Get
 
-	•	getJalaliYear
-	•	getJalaliDateDetails
-	•	getToday
-	•	getCurrentTime
-	•	getTimeFromDate
-	•	getDaysFromNow
-	•	getTimeParts
-	•	getJalaliTimeStamp
-	•	getTimeAgo
+	• getJalaliYear
+	• getJalaliDateDetails
+	• getToday
+	• getCurrentTime
+	• getTimeFromDate
+	• getDaysFromNow
+	• getTimeParts
+	• getJalaliTimeStamp
+	• getTimeAgo
 
 ### Utility
 
-	. addDaysToDate
-	. isBeforeDate
+	• addDaysToDate
+	• isBeforeDate
 
 ### Constants
 
-	. jalaliMonthNames
-	. jalaliWeekdayNames
+	• jalaliMonthNames
+	• jalaliWeekdayNames
 
-## Function Patterns
+## Function Naming Patterns
 
 The library follows these naming patterns for better consistency and developer experience:
 
-	•	convert: For transforming between formats (e.g., Gregorian ↔ Jalali).
-	•	format: For displaying dates in specific formats (e.g., padded, localized).
-	•	get: For retrieving specific details (e.g., year, month, time).
-	•	utility: For miscellaneous operations (e.g., comparisons, adding days).
-	•	constants: Static arrays or objects (e.g., month and weekday names).
+	• convert: For transforming between formats (e.g., Gregorian ↔ Jalali).
+	• format: For displaying dates in specific formats (e.g., padded, localized).
+	• get: For retrieving specific details (e.g., year, month, time).
+	• utility: For miscellaneous operations (e.g., comparisons, adding days).
+	• constants: Static arrays or objects (e.g., month and weekday names).
 
 ## Features
 
-	•	Convert between Shamsi (Jalali) and Gregorian (Miladi) dates.
-	•	Format dates for display in localized formats.
-	•	Utility functions for date manipulation (e.g., adding days, comparing dates).
+	• Convert between Shamsi (Jalali) and Gregorian (Miladi) dates.
+	• Persian formatting with month/weekday names.
+	• Utility functions for date manipulation (e.g., adding days, comparing dates).
 
 ## Improvements:
 
-	1.	Consistent headings: Simplifies navigation for users.
-	2.	Better function categorization: Clear and concise explanation of each group.
-	3.	Cleaner examples: Makes it easier for new users to understand the API.
-	4.	Polished grammar and style: Improves readability and professionalism.
+	1. Consistent headings: Simplifies navigation for users.
+	2. Better function categorization: Clear and concise explanation of each group.
+	3. Cleaner examples: Makes it easier for new users to understand the API.
+	4. Polished grammar and style: Improves readability and professionalism.
 
 ## Usage
 `Here's a simple example of how to use persidate in your project:`
 
-```javascript
+```ts
+// Convert to local ISO string
+const localISO = convertToStandardDateTime(new Date('2024-10-18T10:00:00Z'));
+console.log(localISO); // 2024-10-18T13:30:00
 
-// Convert any given date to standard ISO format in local time
-const localISODate = convertToStandardDateTime(new Date('2024-10-18T10:00:00Z'));
-console.log(localISODate); // Output: 2024-10-18T13:30:00 (depending on your timezone)
-
-// Convert a given date to ISO format with timezone offset adjustment
+// Convert to ISO with timezone adjustment
 const isoDate = convertToISODateTime('2024-10-18T10:00:00Z');
-console.log(isoDate); // Output: 2024-10-18T11:00:00 (depending on your timezone)
+console.log(isoDate); // 2024-10-18T11:00:00
 
-// Convert Shamsi date to Gregorian as a Date object
-const miladiDate = convertToGregorianDate("1403-8-16");
-console.log(miladiDate); // Output: Wed Nov 06 2024 00:00:00 GMT+0330 (Iran Standard Time)
+// Convert Jalali (Shamsi) to Gregorian Date object
+const miladi = convertToGregorianDate("1403-8-16");
+console.log(miladi); // Wed Nov 06 2024 ...
 
-// Convert Shamsi date to Gregorian as a formatted string
-const miladiDateString = convertToGregorianDateString("1403/8/16");
-console.log(miladiDateString); // Output: 2024/11/6
+// Convert Jalali to formatted Gregorian string
+const miladiStr = convertToGregorianDateString("1403/8/16");
+console.log(miladiStr); // 2024/11/6
 
-// Convert Gregorian date to Shamsi
-const shamsiDate = convertToJalaliDate('2024-10-18');
-console.log(shamsiDate); // Output: 1403-7-26
-const shamsiDate2 = convertToJalaliDate(new Date());
-console.log(shamsiDate2); // Output: 1403-7-26
+// Convert Gregorian to Jalali with default format
+const shamsi1 = convertToJalaliDate("2024-10-18");
+console.log(shamsi1); // 1403-07-27
 
-// Format a Gregorian date to Shamsi with Persian month names
-const formattedShamsi1 = convertToJalaliWithOptions("2024-10-18", "dayMonth");
-console.log(formattedShamsi1); // Output: "26 مهر"
-const formattedShamsi2 = convertToJalaliWithOptions("2024-10-18", "dayMonthYear");
-console.log(formattedShamsi2); // Output: "26 مهر 1403"
-const formattedShamsi3 = convertToJalaliWithOptions("2024-10-18", "weekdayDayMonth");
-console.log(formattedShamsi3); // Output: "جمعه 26 مهر"
-const formattedShamsi4 = convertToJalaliWithOptions("2024-10-18", "weekdayDayMonthYear");
-console.log(formattedShamsi4); // Output: "جمعه 26 مهر 1403"
-const formattedShamsi5 = convertToJalaliWithOptions("2024-10-18", "day");
-console.log(formattedShamsi5); // Output: "26"
-const formattedShamsi6 = convertToJalaliWithOptions("2024-10-18", "weekday");
-console.log(formattedShamsi6); // Output: "جمعه"
-const formattedShamsi7 = convertToJalaliWithOptions("2024-10-18", "month");
-console.log(formattedShamsi7); // Output: "مهر"
+//convert Georgian date to Jalali
+const shamsi2 = convertToJalaliDate(new Date());
+console.log(germanDate); // 1403-07-27
+
+// Convert Gregorian to Jalali with custom formats
+console.log(convertToJalaliDate("2024-10-18", "dayMonth"));             // 27 مهر
+console.log(convertToJalaliDate("2024-10-18", "dayMonthYear"));        // 27 مهر 1403
+console.log(convertToJalaliDate("2024-10-18", "weekdayDayMonth"));     // جمعه 27 مهر
+console.log(convertToJalaliDate("2024-10-18", "weekdayDayMonthYear")); // جمعه 27 مهر 1403
+console.log(convertToJalaliDate("2024-10-18", "day"));                 // 27
+console.log(convertToJalaliDate("2024-10-18", "weekday"));             // جمعه
+console.log(convertToJalaliDate("2024-10-18", "month"));               // مهر
 
 
-// Convert a Unix timestamp to Gregorian date string in YYYY-MM-DD format
-const gregorianDate = formatToGregorianDate(1697625600000); // Timestamp for '2023-10-19T00:00:00Z'
-console.log(gregorianDate); // Output: 2023-10-19
+// Timestamp to Gregorian date string
+console.log(formatToGregorianDate(1697625600000)); // 2023-10-19
 
-// Convert a Date object to Gregorian date string in YYYY-MM-DD format
-const dateObject = new Date('2024-10-18');
-const gregorianDateFromObject = formatToGregorianDate(dateObject);
-console.log(gregorianDateFromObject); // Output: 2024-10-18
+// Date object to Gregorian string
+console.log(formatToGregorianDate(new Date('2024-10-18'))); // 2024-10-18
 
-// Convert a Jalali date with time to Gregorian date string with time
-const gregorianDateTime = formatToGregorianDateTime(1403, 7, 26, '14:30');
-console.log(gregorianDateTime); // Output: 2024-10-17T14:30
+// Jalali date + time to Gregorian datetime string
+console.log(formatToGregorianDateTime(1403, 7, 26, '14:30')); // 2024-10-17T14:30
 
-// Convert Gregorian date to Jalali date with padded month and day
-const jalaliDatePadded = formatToJalaliDatePadded('2024-10-18');
-console.log(jalaliDatePadded); // Output: 1403-07-26
+// Gregorian to Jalali (padded)
+console.log(formatToJalaliDatePadded('2024-10-18')); // 1403-07-26
 
-// Get the Jalali year from a Gregorian date string
-const jalaliYear = getJalaliYear('2024-10-18');
-console.log(jalaliYear); // Output: 1403
+// Gregorian to localized Jalali string
+console.log(formatToLocalizedDate('2024-10-18', 'jYYYY-jM-jD')); // 1403-7-26
 
-// Get the Jalali date details from Gregorian year, month, and day
-const jalaliDateDetails = getJalaliDateDetails(2024, 9, 18); // 2024-10-18
-console.log(jalaliDateDetails); // Output: 1403/07/26
 
-// Get today's date in YYYY-MM-DD format
-const today = getToday();
-console.log(today); // Output: 2024-10-17
 
-// Get the current time (HH:mm) from a full date-time string
-const currentTime = getCurrentTime('2024-10-18T14:30:00');
-console.log(currentTime); // Output: 14:30
+// Get Jalali year from Gregorian string
+console.log(getJalaliYear('2024-10-18')); // 1403
 
-// Extract time from a full date-time string
-const extractedTime = getTimeFromDate('2024-10-18T14:30:00');
-console.log(extractedTime); // Output: 14:30
+// Get Jalali details from Gregorian year/month/day
+console.log(getJalaliDateDetails(2024, 9, 18)); // 1403/07/26
 
-// Get the time parts from a time string (HH:mm:ss)
-const timeParts = getTimeParts('14:30:45');
-console.log(timeParts); // Output: { hour: '14', minute: '30', second: '45' }
+// Get today's date (YYYY-MM-DD)
+console.log(getToday()); // e.g. 2024-10-17
 
-// Get the number of days between today and a specified date
-const daysFromNow = getDaysFromNow("2025-08-01T12:00:00");
-console.log(daysFromNow); // Output: 20
-const daysFromNow2 = getDaysFromNow(new Date("2025-07-20"));
-console.log(daysFromNow2); // Output: 8
+// Extract time from datetime string
+console.log(getCurrentTime('2024-10-18T14:30:00')); // 14:30
+console.log(getTimeFromDate('2024-10-18T14:30:00')); // 14:30
 
-// Get Jalali (Persian) date string to a Unix timestamp in milliseconds
-const jalaliTimeStamp = getJalaliTimeStamp("1404-01-01");
-console.log(jalaliTimeStamp); // Output: 1710873600000
+// Parse time parts from HH:mm:ss
+console.log(getTimeParts('14:30:45'));
+// { hour: '14', minute: '30', second: '45' }
 
-// Get the time difference between two dates in Persian language
-const timeAgo = getTimeAgo(new Date("2025-07-20"));
-console.log(timeAgo); // Output: ۲ روز پیش
+// Days from now to future date
+console.log(getDaysFromNow("2025-08-01T12:00:00")); // 20
+console.log(getDaysFromNow(new Date("2025-07-20"))); // 8
 
-// Convert Gregorian date to localized Shamsi format
-const localizedShamsi = formatToLocalizedDate('2024-10-18', 'jYYYY-jM-jD');
-console.log(localizedShamsi); // Output: 1403-7-26
+// Convert Jalali to timestamp (ms)
+console.log(getJalaliTimeStamp("1404-01-01")); // 1710873600000
 
-// Add 10 days to today's date
+// Time difference in Persian (e.g. "۲ روز پیش")
+console.log(getTimeAgo(new Date("2025-07-20")));
+
+
+
+// Add N days to a date
 const today = new Date();
-const newDate = addDaysToDate(today, 10);
-console.log(newDate); // Outputs a new date 10 days ahead of today
+const plusTen = addDaysToDate(today, 10);
+console.log(plusTen);
 
-// Check if first date is before second date
+// Compare two dates
 const date1 = '2024-10-18';
 const date2 = '2025-01-01';
-const result = isBeforeDate(date1, date2);
-console.log(result); // Outputs: true (since 2024-10-18 is before 2025-01-01)
-
+console.log(isBeforeDate(date1, date2)); // true
 ```
 
-## Contributors ✨
+## Contributors
 
 `mmsafari:` [https://github.com/mmsafari](mmsafari)
