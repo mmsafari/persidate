@@ -367,9 +367,10 @@ export const getJalaliTimeStamp = (jalaliDate: string): number => {
  * in Persian language format.
  *
  * @param {Date | string} date - The input date, either a Date object or a string parsable by `new Date()`.
- * @returns {string}  A Persian relative time string such as "۵ دقیقه پیش"
+ * @param {string} [suffix='پیش'] - Optional string to append, like 'پیش', 'قبل', or custom. Defaults to 'پیش'.
+ * @returns {string} A Persian relative time string such as "۵ دقیقه پیش"
  */
-export const getTimeAgo = (date: Date | string): string => {
+export const getTimeAgo = (date: Date | string, suffix: string = 'پیش'): string => {
 	const d = typeof date === "string" ? new Date(date) : date;
 	const now = new Date();
 	const diffMs = now.getTime() - d.getTime();
@@ -381,13 +382,14 @@ export const getTimeAgo = (date: Date | string): string => {
 	const diffMonth = Math.floor(diffDay / 30);
 	const diffYear = Math.floor(diffDay / 365);
 
-	if (diffSec < 60) return "لحظاتی پیش";
-	if (diffMin < 60) return `${diffMin} دقیقه پیش`;
-	if (diffHr < 24) return `${diffHr} ساعت پیش`;
-	if (diffDay < 30) return `${diffDay} روز پیش`;
-	if (diffMonth < 12) return `${diffMonth} ماه پیش`;
-	return `${diffYear} سال پیش`;
+	if (diffSec < 60) return `لحظاتی ${suffix}`;
+	if (diffMin < 60) return `${diffMin} دقیقه ${suffix}`;
+	if (diffHr < 24) return `${diffHr} ساعت ${suffix}`;
+	if (diffDay < 30) return `${diffDay} روز ${suffix}`;
+	if (diffMonth < 12) return `${diffMonth} ماه ${suffix}`;
+	return `${diffYear} سال ${suffix}`;
 };
+
 
 /**
  * Adds days to the Date object.
@@ -420,15 +422,6 @@ export const isBeforeDate = (first: string, second: string): boolean => {
 	const firstTime = new Date(first).getTime();
 	const secondTime = new Date(second).getTime();
 	return firstTime < secondTime;
-};
-
-/**
- * Check if the given date is valid.
- * @param {Date} date - Date to check.
- * @returns {boolean} True if the date is valid.
- */
-export const isValidDate = (date: Date): boolean => {
-	return date instanceof Date && !isNaN(date.getTime());
 };
 
 /**

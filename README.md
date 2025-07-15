@@ -1,4 +1,4 @@
-# 📅 persidate
+# persidate
 
 [![Version](https://img.shields.io/npm/v/persidate?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/persidate)
 [![Build Size](https://img.shields.io/bundlephobia/minzip/persidate?label=bundle%20size&style=flat&colorA=000000&colorB=000000)](https://bundlephobia.com/result?p=persidate)
@@ -8,7 +8,7 @@
 
 ---
 
-## 🚀 Installation
+## Installation
 
 Using npm:
 ```bash
@@ -20,7 +20,6 @@ Using yarn:
 yarn add persidate
 ```
 
----
 
 ## Available Functions
 
@@ -55,7 +54,6 @@ yarn add persidate
 
 	• addDaysToDate
 	• isBeforeDate
-	• isValidDate
 	• isLeapYearJalali
 
 ### Constants
@@ -140,7 +138,6 @@ console.log(formatToJalaliDatePadded('2024-10-18')); // 1403-07-26
 console.log(formatToLocalizedDate('2024-10-18', 'jYYYY-jM-jD')); // 1403-7-26
 
 
-
 // Get Jalali year from Gregorian string
 console.log(getJalaliYear('2024-10-18')); // 1403
 
@@ -169,7 +166,6 @@ console.log(getJalaliTimeStamp("1404-01-01")); // 1710873600000
 console.log(getTimeAgo(new Date("2025-07-20")));
 
 
-
 // Add N days to a date
 const today = new Date();
 const plusTen = addDaysToDate(today, 10);
@@ -179,10 +175,6 @@ console.log(plusTen);
 const date1 = '2024-10-18';
 const date2 = '2025-01-01';
 console.log(isBeforeDate(date1, date2)); // true
-
-// Check if the given date is valid
-const date = new Date();
-console.log(isValidDate(date)); // true
 
 // Check if the given Jalali year is a leap year
 console.log(isLeapYearJalali(1403)); // true
