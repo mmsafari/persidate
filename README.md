@@ -43,7 +43,6 @@ yarn add persidate
 	• getJalaliYear
 	• getJalaliDateDetails
 	• getToday
-	• getCurrentTime
 	• getTimeFromDate
 	• getDaysFromNow
 	• getTimeParts
@@ -148,8 +147,8 @@ console.log(getJalaliDateDetails(2024, 9, 18)); // 1403/07/26
 console.log(getToday()); // e.g. 2024-10-17
 
 // Extract time from datetime string
-console.log(getCurrentTime('2024-10-18T14:30:00')); // 14:30
 console.log(getTimeFromDate('2024-10-18T14:30:00')); // 14:30
+console.log(getTimeFromDate(new Date()));	// 12:43
 
 // Parse time parts from HH:mm:ss
 console.log(getTimeParts('14:30:45'));

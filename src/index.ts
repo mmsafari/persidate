@@ -288,29 +288,20 @@ export const getToday = (): string => {
 };
 
 /**
- * Extracts the time (HH:mm) from a full date-time string in the format YYYY-MM-DDTHH:mm:ss.
- * @param {string} timeString - Full date-time string.
- * @returns {string} Extracted time in HH:mm format.
- */
-export const getCurrentTime = (timeString: string): string => {
-	if (typeof timeString !== "undefined") {
-		const parts = timeString?.split("T", 2);
-		return parts[1]?.slice(0, 5);
-	} else {
-		return "";
-	}
-};
-
-/**
- * Extracts time from a date string in the format YYYY-MM-DDTHH:mm:ss.
- * @param {string} timeString - Date string with time.
+ * Extracts time from a date string or Date object in the format HH:mm.
+ * @param {string | Date} date - Date as string (YYYY-MM-DDTHH:mm:ss) or Date object.
  * @returns {string} Time in the format HH:mm.
  */
-export const getTimeFromDate = (timeString: string): string => {
-	if (typeof timeString !== "undefined") {
-		const parts = timeString.split("T", 2);
-		return parts[1]?.slice(0, 5);
+export const getTimeFromDate = (date: string | Date): string => {
+	const dateObj = typeof date === "string" ? new Date(date) : date;
+
+	if (!isNaN(dateObj.getTime())) {
+		// Check if date is valid
+		const hours = String(dateObj.getHours()).padStart(2, "0");
+		const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+		return `${hours}:${minutes}`;
 	}
+
 	return "";
 };
 
@@ -370,7 +361,10 @@ export const getJalaliTimeStamp = (jalaliDate: string): number => {
  * @param {string} [suffix='پیش'] - Optional string to append, like 'پیش', 'قبل', or custom. Defaults to 'پیش'.
  * @returns {string} A Persian relative time string such as "۵ دقیقه پیش"
  */
-export const getTimeAgo = (date: Date | string, suffix: string = 'پیش'): string => {
+export const getTimeAgo = (
+	date: Date | string,
+	suffix: string = "پیش"
+): string => {
 	const d = typeof date === "string" ? new Date(date) : date;
 	const now = new Date();
 	const diffMs = now.getTime() - d.getTime();
@@ -389,7 +383,6 @@ export const getTimeAgo = (date: Date | string, suffix: string = 'پیش'): stri
 	if (diffMonth < 12) return `${diffMonth} ماه ${suffix}`;
 	return `${diffYear} سال ${suffix}`;
 };
-
 
 /**
  * Adds days to the Date object.
