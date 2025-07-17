@@ -29,11 +29,14 @@ export const convertToStandardDateTime = (date: Date): string => {
 
 /**
  * Converts date to ISO format with a timezone offset adjustment.
- * @param {Date | string} date - The input date.
+ * @param {Date | string | number} date - The input date.
  * @returns {string} Adjusted ISO date string.
  */
-export const convertToISODateTime = (date: Date | string): string => {
-	const formattedDate = typeof date === "string" ? new Date(date) : date;
+export const convertToISODateTime = (date: Date | string | number): string => {
+	const formattedDate =
+		typeof date === "string" || typeof date === "number"
+			? new Date(date)
+			: date;
 	const tzoffset = (formattedDate.getTimezoneOffset() - 60) * 60000;
 	const localISOTime = new Date(formattedDate.getTime() - tzoffset)
 		.toISOString()
@@ -93,6 +96,7 @@ export const convertToJalaliDate = (
 		| "day"
 		| "weekday"
 		| "month"
+		| "year"
 		| "dayMonth"
 		| "dayMonthYear"
 		| "weekdayDayMonth"
@@ -107,7 +111,7 @@ export const convertToJalaliDate = (
 		/[-\/]/
 	);
 	const [year, month, day] = parts;
-	const weekday = jalaliWeekdayNames[parsedDate.getDay()];
+	const weekday = jalaliWeekdayNamesGregorianFormat[parsedDate.getDay()];
 	const persianMonth = jalaliMonthNames[month - 1];
 
 	// Default fallback: YYYY-MM-DD
@@ -122,6 +126,8 @@ export const convertToJalaliDate = (
 			return `${weekday}`;
 		case "month":
 			return `${persianMonth}`;
+		case "year":
+			return `${year}`;
 		case "dayMonth":
 			return `${day} ${persianMonth}`;
 		case "dayMonthYear":
@@ -150,31 +156,29 @@ export const formatToGregorianDate = (date: number | Date): string => {
 
 /**
  * Converts Jalali date and time to Gregorian date string with time.
- * @param {number} year - Jalali year.
- * @param {number} month - Jalali month.
- * @param {number} day - Jalali day.
- * @param {number} time - Time in the format HH:mm.
+ * @param {number | Date} date - Unix timestamp or Date object.
  * @returns {string} Gregorian date string with time in the format YYYY-MM-DDTHH:mm.
  */
 export const formatToGregorianDateTime = (
-	year: number,
-	month: number,
-	day: number,
+	date: number | Date,
 	time: string
 ): string => {
-	const date = toGregorian(year, month, day);
-	return `${date[0]}-${("0" + date[1]).slice(-2)}-${("0" + date[2]).slice(
-		-2
-	)}T${time}`;
+	const formattedDate = formatToGregorianDate(date);
+	return `${formattedDate}T${time}`;
 };
 
 /**
  * Converts a Gregorian date to a formatted Jalali date with padded month and day.
- * @param {Date | string} date - Gregorian date object.
+ * @param {Date | string | number} date - Gregorian date object.
  * @returns {string} Jalali date in the format YYYY-MM-DD with zero-padded month and day.
  */
-export const formatToJalaliDatePadded = (date: Date | string): string => {
-	const formattedDate = typeof date === "string" ? new Date(date) : date;
+export const formatToJalaliDatePadded = (
+	date: Date | string | number
+): string => {
+	const formattedDate =
+		typeof date === "string" || typeof date === "number"
+			? new Date(date)
+			: date;
 	const parts = parseArabic(formattedDate.toLocaleDateString(locale)).split(
 		/[/-]/
 	);
@@ -184,15 +188,28 @@ export const formatToJalaliDatePadded = (date: Date | string): string => {
 	return `${parts[0]}-${month}-${day}`;
 };
 
+type ISupportedDateFormats =
+	| "jYYYY-jM-jD"
+	| "jYYYY-jMM-jDD"
+	| "jMMMM"
+	| "jD"
+	| "jDDD"
+	| "jDDD-jMM-jYY"
+	| "YYYY-MM-DD"
+	| "YYYY/MM/DD"
+	| "YYYY/MM/DD HH:mm"
+	| "HH:mm"
+	| "YYYY/MM/DDTHH:mm:ss";
+
 /**
  * Formats a date string according to the specified format.
- * @param {string|Date} date - The input date string or Date object.
- * @param {string} format - The desired output format (e.g., 'jD jMMMM jYY', 'YYYY/MM/DD').
- * @returns {string|null} Formatted date string or null if date is invalid.
+ * @param {string | Date} date - The input date string or Date object.
+ * @param {SupportedDateFormats} format - The desired output format.
+ * @returns {string | null} Formatted date string or null if invalid.
  */
 export const formatToLocalizedDate = (
 	date: string | Date,
-	format: string
+	format: ISupportedDateFormats
 ): string | null => {
 	if (!date) return null;
 	if (date instanceof Date) {
@@ -217,6 +234,7 @@ export const formatToLocalizedDate = (
 	if (format === "jDDD-jMM-jYY") {
 		return convertToJalaliDate(date, "dayMonthYear");
 	}
+
 	if (typeof date === "string") {
 		if (date.includes("/")) date = date.replace(/\//g, "-");
 	}
@@ -224,9 +242,7 @@ export const formatToLocalizedDate = (
 	const spited: any = convertToISODateTime(date)?.split("T");
 	const clockSpited = spited[1]?.split(":");
 
-	if (format === "YYYY-MM-DD") {
-		return spited[0];
-	}
+	if (format === "YYYY-MM-DD") return spited[0];
 	if (format === "YYYY/MM/DD") return spited[0]?.replace(/-/g, "/");
 	if (format === "YYYY/MM/DD HH:mm")
 		return (
@@ -247,34 +263,8 @@ export const formatToLocalizedDate = (
 			":" +
 			clockSpited[2]?.split(".")[0]
 		);
+
 	return null;
-};
-
-/**
- * Extracts the Jalali (jalali) year from a Gregorian date string.
- * @param {string} dateString - Gregorian date string.
- * @returns {string} Jalali year.
- */
-export const getJalaliYear = (dateString: string): string => {
-	const date = new Date(dateString);
-	const parts = parseArabic(date.toLocaleDateString(locale)).split(/[-\/]/);
-	return parts[0];
-};
-
-/**
- * Converts a date's year, month, and day to Jalali (jalali) date.
- * @param {number} year - Gregorian year.
- * @param {number} month - Gregorian month (0-indexed).
- * @param {number} day - Gregorian day.
- * @returns {string} Jalali date string.
- */
-export const getJalaliDateDetails = (
-	year: number,
-	month: number,
-	day: number
-): string => {
-	const date = new Date(year, month, day).toLocaleDateString(locale);
-	return date;
 };
 
 /**
@@ -289,47 +279,38 @@ export const getToday = (): string => {
 
 /**
  * Extracts time from a date string or Date object in the format HH:mm.
- * @param {string | Date} date - Date as string (YYYY-MM-DDTHH:mm:ss) or Date object.
+ * @param {string | number | Date} date - Date as string (YYYY-MM-DDTHH:mm:ss) or Date object.
  * @returns {string} Time in the format HH:mm.
  */
-export const getTimeFromDate = (date: string | Date): string => {
-	const dateObj = typeof date === "string" ? new Date(date) : date;
+export const getTimeFromDate = (
+	date: string | number | Date = new Date()
+): string => {
+	const dateObj =
+		typeof date === "string" || typeof date === "number"
+			? new Date(date)
+			: date;
 
 	if (!isNaN(dateObj.getTime())) {
 		// Check if date is valid
 		const hours = String(dateObj.getHours()).padStart(2, "0");
 		const minutes = String(dateObj.getMinutes()).padStart(2, "0");
-		return `${hours}:${minutes}`;
+		const seconds = String(dateObj.getSeconds()).padStart(2, "0");
+		return `${hours}:${minutes}:${seconds}`;
 	}
 
 	return "";
 };
 
 /**
- * Splits a time string in the format HH:mm:ss and returns only the hours and minutes.
- * @param {string} timeString - Time string.
- * @returns {Object} Time in the format {hour: string, minute: string, second: string}.
- */
-export const getTimeParts = (timeString: string): Object => {
-	if (typeof timeString !== "undefined") {
-		const parts = timeString.split(":", 2);
-		return {
-			hour: parts[0],
-			minute: parts[1],
-			second: parts[2],
-		};
-	}
-	return {};
-};
-
-/**
  * Calculates the number of days between now and a given date.
- * @param {string | Date} inputDate - A Date object or a string parsable by `new Date()`.
+ * @param {string | Date | number} inputDate - A Date object or a string parsable by `new Date() or timeStamp`.
  * @returns {number} Number of days until the date (can be negative if in the past).
  */
 export const getDaysFromNow = (inputDate: string | Date): number => {
 	const targetDate =
-		typeof inputDate === "string" ? new Date(inputDate) : inputDate;
+		typeof inputDate === "string" || typeof inputDate === "number"
+			? new Date(inputDate)
+			: inputDate;
 
 	if (isNaN(targetDate.getTime())) {
 		throw new Error("Invalid date format. Use ISO format or Date object.");
@@ -357,15 +338,18 @@ export const getJalaliTimeStamp = (jalaliDate: string): number => {
  * Returns a string indicating how long ago the given date was,
  * in Persian language format.
  *
- * @param {Date | string} date - The input date, either a Date object or a string parsable by `new Date()`.
+ * @param {Date | string | number} date - The input date, either a Date object or a string parsable by `new Date()`.
  * @param {string} [suffix='پیش'] - Optional string to append, like 'پیش', 'قبل', or custom. Defaults to 'پیش'.
  * @returns {string} A Persian relative time string such as "۵ دقیقه پیش"
  */
 export const getTimeAgo = (
-	date: Date | string,
+	date: Date | string | number,
 	suffix: string = "پیش"
 ): string => {
-	const d = typeof date === "string" ? new Date(date) : date;
+	const d =
+		typeof date === "string" || typeof date === "number"
+			? new Date(date)
+			: date;
 	const now = new Date();
 	const diffMs = now.getTime() - d.getTime();
 
@@ -442,7 +426,18 @@ export const jalaliMonthNames: string[] = [
 	"بهمن",
 	"اسفند",
 ];
+
 export const jalaliWeekdayNames: string[] = [
+	"شنبه",
+	"یکشنبه",
+	"دوشنبه",
+	"سه‌شنبه",
+	"چهارشنبه",
+	"پنج‌شنبه",
+	"جمعه",
+];
+
+const jalaliWeekdayNamesGregorianFormat: string[] = [
 	"یکشنبه",
 	"دوشنبه",
 	"سه‌شنبه",

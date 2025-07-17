@@ -40,12 +40,9 @@ yarn add persidate
 
 ### Get
 
-	• getJalaliYear
-	• getJalaliDateDetails
 	• getToday
 	• getTimeFromDate
 	• getDaysFromNow
-	• getTimeParts
 	• getJalaliTimeStamp
 	• getTimeAgo
 
@@ -119,6 +116,7 @@ console.log(convertToJalaliDate("2024-10-18", "weekdayDayMonthYear")); // جمع
 console.log(convertToJalaliDate("2024-10-18", "day"));                 // 27
 console.log(convertToJalaliDate("2024-10-18", "weekday"));             // جمعه
 console.log(convertToJalaliDate("2024-10-18", "month"));               // مهر
+console.log(convertToJalaliDate(1752771248824, "year"));               // 1404
 
 
 // Timestamp to Gregorian date string
@@ -128,31 +126,25 @@ console.log(formatToGregorianDate(1697625600000)); // 2023-10-19
 console.log(formatToGregorianDate(new Date('2024-10-18'))); // 2024-10-18
 
 // Jalali date + time to Gregorian datetime string
-console.log(formatToGregorianDateTime(1403, 7, 26, '14:30')); // 2024-10-17T14:30
+console.log(formatToGregorianDateTime(new Date(), '14:30')); // 2024-10-17T14:30
+console.log(formatToGregorianDateTime(1697625600000, '14:30')); // 2024-10-17T14:30
 
 // Gregorian to Jalali (padded)
 console.log(formatToJalaliDatePadded('2024-10-18')); // 1403-07-26
+console.log(formatToJalaliDatePadded(new Date())); // 1403-07-26
+console.log(formatToJalaliDatePadded(1697625600000)); // 1403-07-26
 
 // Gregorian to localized Jalali string
 console.log(formatToLocalizedDate('2024-10-18', 'jYYYY-jM-jD')); // 1403-7-26
 
 
-// Get Jalali year from Gregorian string
-console.log(getJalaliYear('2024-10-18')); // 1403
-
-// Get Jalali details from Gregorian year/month/day
-console.log(getJalaliDateDetails(2024, 9, 18)); // 1403/07/26
-
 // Get today's date (YYYY-MM-DD)
 console.log(getToday()); // e.g. 2024-10-17
 
 // Extract time from datetime string
-console.log(getTimeFromDate('2024-10-18T14:30:00')); // 14:30
-console.log(getTimeFromDate(new Date()));	// 12:43
-
-// Parse time parts from HH:mm:ss
-console.log(getTimeParts('14:30:45'));
-// { hour: '14', minute: '30', second: '45' }
+console.log(getTimeFromDate('2024-10-18T14:30:00')); // 14:30:00
+console.log(getTimeFromDate(new Date()));	// 12:43:00
+console.log(getTimeFromDate(1697625600000)); // 12:43:00
 
 // Days from now to future date
 console.log(getDaysFromNow("2025-08-01T12:00:00")); // 20
@@ -162,7 +154,9 @@ console.log(getDaysFromNow(new Date("2025-07-20"))); // 8
 console.log(getJalaliTimeStamp("1404-01-01")); // 1710873600000
 
 // Time difference in Persian (e.g. "۲ روز پیش")
-console.log(getTimeAgo(new Date("2025-07-20")));
+console.log(getTimeAgo(new Date()));
+console.log(getTimeAgo("2025-07-20"));
+console.log(getTimeAgo(1697625600000));
 
 
 // Add N days to a date
