@@ -20,6 +20,27 @@ Using yarn:
 yarn add persidate
 ```
 
+## Benchmark
+
+Benchmarks were executed on **Node.js v20** running on a MacBook Air M3.
+All tests were performed using **benchmark.js**.
+Each test measured `format` (stringifying a date) and `parse` (converting from Jalali to Gregorian).
+
+| Package       | convert to jalali (ops/sec) | convert to gregorian (ops/sec)   | Bundle size (Minified + Gzipped) | Ease of Use | Key Features |
+|---------------|-----------------|-----------------|---------------------------------|------------|--------------|
+| `persidate`     | 617,951         | **3,747,380**       | **2.2 KB**                          | **Simple API** | **Fast Jalali parsing, Lightweight, No dependencies** |
+| jalali-moment | 62,286          | 67,461          | 78.4 KB                         | ⚠️ Verbose API | Full Jalali support, Heavy, Legacy-style API |
+| dayjs         | **784,901**         | (no native Jalali) | 3 KB                           | **Simple API** | Fast formatting, Plugin-based Jalali support |
+
+### Why persidate?
+- **Ultra-fast** Jalali ↔ Gregorian conversions.
+- **Lightweight** and dependency-free.
+- **Code Quality:** Verified with `SonarQube Cloud`.
+- Clean and developer-friendly API.
+- Built specifically for projects that need **modern, reliable Persian date handling**.
+
+
+
 
 ## Available Functions
 
