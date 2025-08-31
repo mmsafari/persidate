@@ -5,6 +5,21 @@ declare global {
 	}
 }
 
+type DateInput = Date | string | number;
+
+type ISupportedDateFormats =
+	| "jYYYY-jM-jD"
+	| "jYYYY-jMM-jDD"
+	| "jMMMM"
+	| "jD"
+	| "jDDD"
+	| "jDDD-jMM-jYY"
+	| "YYYY-MM-DD"
+	| "YYYY/MM/DD"
+	| "YYYY/MM/DD HH:mm"
+	| "HH:mm"
+	| "YYYY/MM/DDTHH:mm:ss";
+
 // Extending Date prototype
 const DT: any = Date.prototype;
 
@@ -29,10 +44,10 @@ export const convertToStandardDateTime = (date: Date): string => {
 
 /**
  * Converts date to ISO format with a timezone offset adjustment.
- * @param {Date | string | number} date - The input date.
+ * @param {DateInput} date - The input date.
  * @returns {string} Adjusted ISO date string.
  */
-export const convertToISODateTime = (date: Date | string | number): string => {
+export const convertToISODateTime = (date: DateInput): string => {
 	const formattedDate =
 		typeof date === "string" || typeof date === "number"
 			? new Date(date)
@@ -71,7 +86,7 @@ export const convertToGregorianDateString = (jalaliDate: string): string => {
 /**
  * Converts a Gregorian date to a Jalali date in a specified format.
  *
- * @param {Date | string | number} date - The Gregorian date input.
+ * @param {DateInput} date - The Gregorian date input.
  * @param { "day" | "weekday" | "month" | "dayMonth" | "dayMonthYear" | "weekdayDayMonth" | "weekdayDayMonthYear" } [format] -
  *   Optional format for the output:
  *   - If omitted, returns "YYYY-MM-DD"
@@ -91,7 +106,7 @@ export const convertToGregorianDateString = (jalaliDate: string): string => {
  * convertToJalaliDate(new Date(), "weekday"); // → "دوشنبه"
  */
 export const convertToJalaliDate = (
-	date: Date | string | number,
+	date: DateInput,
 	format?:
 		| "day"
 		| "weekday"
@@ -108,7 +123,7 @@ export const convertToJalaliDate = (
 			: date;
 
 	const parts: any = parseArabic(parsedDate.toLocaleDateString("fa-IR")).split(
-		/[-\/]/
+		/[-/]/
 	);
 	const [year, month, day] = parts;
 	const weekday = jalaliWeekdayNamesGregorianFormat[parsedDate.getDay()];
@@ -169,12 +184,10 @@ export const formatToGregorianDateTime = (
 
 /**
  * Converts a Gregorian date to a formatted Jalali date with padded month and day.
- * @param {Date | string | number} date - Gregorian date object.
+ * @param {DateInput} date - Gregorian date object.
  * @returns {string} Jalali date in the format YYYY-MM-DD with zero-padded month and day.
  */
-export const formatToJalaliDatePadded = (
-	date: Date | string | number
-): string => {
+export const formatToJalaliDatePadded = (date: DateInput): string => {
 	const formattedDate =
 		typeof date === "string" || typeof date === "number"
 			? new Date(date)
@@ -188,19 +201,6 @@ export const formatToJalaliDatePadded = (
 	return `${parts[0]}-${month}-${day}`;
 };
 
-type ISupportedDateFormats =
-	| "jYYYY-jM-jD"
-	| "jYYYY-jMM-jDD"
-	| "jMMMM"
-	| "jD"
-	| "jDDD"
-	| "jDDD-jMM-jYY"
-	| "YYYY-MM-DD"
-	| "YYYY/MM/DD"
-	| "YYYY/MM/DD HH:mm"
-	| "HH:mm"
-	| "YYYY/MM/DDTHH:mm:ss";
-
 /**
  * Formats a date string according to the specified format.
  * @param {string | Date} date - The input date string or Date object.
@@ -208,63 +208,48 @@ type ISupportedDateFormats =
  * @returns {string | null} Formatted date string or null if invalid.
  */
 export const formatToLocalizedDate = (
-	date: string | Date,
+	date: DateInput,
 	format: ISupportedDateFormats
 ): string | null => {
 	if (!date) return null;
+
 	if (date instanceof Date) {
 		date = date.toISOString();
 	}
 
-	if (format === "jYYYY-jM-jD") {
-		return convertToJalaliDate(date);
-	}
-	if (format === "jYYYY-jMM-jDD") {
-		return formatToJalaliDatePadded(date);
-	}
-	if (format === "jMMMM") {
-		return convertToJalaliDate(date, "month");
-	}
-	if (format === "jD") {
-		return convertToJalaliDate(date, "day");
-	}
-	if (format === "jDDD") {
-		return convertToJalaliDate(date, "dayMonth");
-	}
-	if (format === "jDDD-jMM-jYY") {
-		return convertToJalaliDate(date, "dayMonthYear");
+	const jalaliFormats: Record<string, () => string | null> = {
+		"jYYYY-jMM-jDD": () => formatToJalaliDatePadded(date),
+		"jYYYY-jM-jD": () => convertToJalaliDate(date),
+		jMMMM: () => convertToJalaliDate(date, "month"),
+		jD: () => convertToJalaliDate(date, "day"),
+		jDDD: () => convertToJalaliDate(date, "dayMonth"),
+		"jDDD-jMM-jYY": () => convertToJalaliDate(date, "dayMonthYear"),
+	};
+
+	if (jalaliFormats[format]) {
+		return jalaliFormats[format]();
 	}
 
-	if (typeof date === "string") {
-		if (date.includes("/")) date = date.replace(/\//g, "-");
+	if (typeof date === "string" && date.includes("/")) {
+		date = date.replace(/\//g, "-");
 	}
 
-	const spited: any = convertToISODateTime(date)?.split("T");
-	const clockSpited = spited[1]?.split(":");
+	const [isoDate, isoTime] = convertToISODateTime(date)?.split("T") || [];
+	const [hours, minutes, seconds] = isoTime?.split(":") || [];
 
-	if (format === "YYYY-MM-DD") return spited[0];
-	if (format === "YYYY/MM/DD") return spited[0]?.replace(/-/g, "/");
-	if (format === "YYYY/MM/DD HH:mm")
-		return (
-			spited[0]?.replace(/-/g, "/") +
-			" " +
-			clockSpited[0] +
-			":" +
-			clockSpited[1]
-		);
-	if (format === "HH:mm") return clockSpited[0] + ":" + clockSpited[1];
-	if (format === "YYYY/MM/DDTHH:mm:ss")
-		return (
-			spited[0]?.replace(/-/g, "/") +
-			"T" +
-			clockSpited[0] +
-			":" +
-			clockSpited[1] +
-			":" +
-			clockSpited[2]?.split(".")[0]
-		);
+	const gregorianFormats: Record<string, () => string | null> = {
+		"YYYY-MM-DD": () => isoDate,
+		"YYYY/MM/DD": () => isoDate?.replace(/-/g, "/"),
+		"YYYY/MM/DD HH:mm": () =>
+			`${isoDate?.replace(/-/g, "/")} ${hours}:${minutes}`,
+		"HH:mm": () => `${hours}:${minutes}`,
+		"YYYY/MM/DDTHH:mm:ss": () =>
+			`${isoDate?.replace(/-/g, "/")}T${hours}:${minutes}:${
+				seconds?.split(".")[0]
+			}`,
+	};
 
-	return null;
+	return gregorianFormats[format]?.() ?? null;
 };
 
 /**
@@ -338,14 +323,11 @@ export const getJalaliTimeStamp = (jalaliDate: string): number => {
  * Returns a string indicating how long ago the given date was,
  * in Persian language format.
  *
- * @param {Date | string | number} date - The input date, either a Date object or a string parsable by `new Date()`.
+ * @param {DateInput} date - The input date, either a Date object or a string parsable by `new Date()`.
  * @param {string} [suffix='پیش'] - Optional string to append, like 'پیش', 'قبل', or custom. Defaults to 'پیش'.
  * @returns {string} A Persian relative time string such as "۵ دقیقه پیش"
  */
-export const getTimeAgo = (
-	date: Date | string | number,
-	suffix: string = "پیش"
-): string => {
+export const getTimeAgo = (date: DateInput, suffix: string = "پیش"): string => {
 	const d =
 		typeof date === "string" || typeof date === "number"
 			? new Date(date)
@@ -502,7 +484,7 @@ const toGregorian = (
 		31,
 	];
 	let gm = 0;
-	for (gm = 0; gm < 13; gm++) {
+	for (; gm < 13; gm++) {
 		if (gd <= sal_a[gm]) break;
 		gd -= sal_a[gm];
 	}
