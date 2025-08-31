@@ -3,6 +3,8 @@
 [![Version](https://img.shields.io/npm/v/persidate?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/persidate)
 [![Build Size](https://img.shields.io/bundlephobia/minzip/persidate?label=bundle%20size&style=flat&colorA=000000&colorB=000000)](https://bundlephobia.com/result?p=persidate)
 [![Downloads](https://img.shields.io/npm/dt/persidate.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/persidate)
+[![SonarQube](https://sonarcloud.io/api/project_badges/measure?project=mmsafari_persidate&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=mmsafari_persidate)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=mmsafari_persidate&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=mmsafari_persidate)
 
 **`persidate`** is a lightweight JavaScript/TypeScript library designed for converting and managing Shamsi (Jalali) and Gregorian dates. It provides a clean and simple API for handling date conversions, formatting, and utility functions.
 
@@ -24,7 +26,7 @@ yarn add persidate
 
 Benchmarks were executed on **Node.js v20** running on a MacBook Air M3.
 All tests were performed using **benchmark.js**.
-Each test measured `format` (stringifying a date) and `parse` (converting from Jalali to Gregorian).
+Each test measured `format` (converting from Gregorian to Jalali) and `parse` (converting from Jalali to Gregorian).
 
 | Package       | convert to jalali (ops/sec) | convert to gregorian (ops/sec)   | Bundle size (Minified + Gzipped) | Ease of Use | Key Features |
 |---------------|-----------------|-----------------|---------------------------------|------------|--------------|
