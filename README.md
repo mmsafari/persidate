@@ -12,13 +12,9 @@
 
 ## Installation
 
-Using npm:
 ```bash
 npm install persidate
-```
-
-Using yarn:
-```bash
+# or
 yarn add persidate
 ```
 
@@ -26,7 +22,7 @@ yarn add persidate
 
 Benchmarks were executed on **Node.js v20** running on a MacBook Air M3.
 All tests were performed using **benchmark.js**.
-Each test measured `format` (converting from Gregorian to Jalali) and `parse` (converting from Jalali to Gregorian).
+Each test measured `format` (Gregorian → Jalali) and `parse` (Jalali → Gregorian).
 
 | Package       | convert to jalali (ops/sec) | convert to gregorian (ops/sec)   | Bundle size (Minified + Gzipped) | Ease of Use | Key Features |
 |---------------|-----------------|-----------------|---------------------------------|------------|--------------|
@@ -34,19 +30,21 @@ Each test measured `format` (converting from Gregorian to Jalali) and `parse` (c
 | jalali-moment | 62,286          | 67,461          | 78.4 KB                         | ⚠️ Verbose API | Full Jalali support, Heavy, Legacy-style API |
 | dayjs         | **784,901**         | (no native Jalali) | 3 KB                           | **Simple API** | Fast formatting, Plugin-based Jalali support |
 
-### Why persidate?
+
+## Features & Advantages
+
 - **Ultra-fast** Jalali ↔ Gregorian conversions.
 - **Lightweight** and dependency-free.
-- **Code Quality:** Verified with `SonarQube Cloud`.
 - Clean and developer-friendly API.
+- **Code Quality:** Verified with **SonarQube Cloud**.
 - Built specifically for projects that need **modern, reliable Persian date handling**.
+- Utility functions for manipulating, formatting, and comparing dates.
 
 
-
-
-## Available Functions
+## Functions
 
 ### Convert
+##### Transform between Jalali and Gregorian.
 
 	• convertToStandardDateTime
 	• convertToISODateTime
@@ -55,6 +53,7 @@ Each test measured `format` (converting from Gregorian to Jalali) and `parse` (c
 	• convertToJalaliDate
 
 ### Format
+##### Display in specific formats (padded, localized).
 
 	• formatToGregorianDate
 	• formatToGregorianDateTime
@@ -62,6 +61,7 @@ Each test measured `format` (converting from Gregorian to Jalali) and `parse` (c
 	• formatToLocalizedDate
 
 ### Get
+##### Retrieve specific details (today, timestamp, etc).
 
 	• getToday
 	• getTimeFromDate
@@ -70,41 +70,20 @@ Each test measured `format` (converting from Gregorian to Jalali) and `parse` (c
 	• getTimeAgo
 
 ### Utility
+##### Miscellaneous operations (add days, compare dates).
 
 	• addDaysToDate
 	• isBeforeDate
 	• isLeapYearJalali
 
 ### Constants
+##### Static month/weekday names.
 
 	• jalaliMonthNames
 	• jalaliWeekdayNames
 
-## Function Naming Patterns
-
-The library follows these naming patterns for better consistency and developer experience:
-
-	• convert: For transforming between formats (e.g., Gregorian ↔ Jalali).
-	• format: For displaying dates in specific formats (e.g., padded, localized).
-	• get: For retrieving specific details (e.g., year, month, time).
-	• utility: For miscellaneous operations (e.g., comparisons, adding days).
-	• constants: Static arrays or objects (e.g., month and weekday names).
-
-## Features
-
-	• Convert between Shamsi (Jalali) and Gregorian (Miladi) dates.
-	• Persian formatting with month/weekday names.
-	• Utility functions for date manipulation (e.g., adding days, comparing dates).
-
-## Improvements:
-
-	1. Consistent headings: Simplifies navigation for users.
-	2. Better function categorization: Clear and concise explanation of each group.
-	3. Cleaner examples: Makes it easier for new users to understand the API.
-	4. Polished grammar and style: Improves readability and professionalism.
-
 ## Usage
-`Here's a simple example of how to use persidate in your project:`
+Here are some quick examples:
 
 ```ts
 // Convert to local ISO string
@@ -198,4 +177,4 @@ console.log(isLeapYearJalali(1403)); // true
 
 ## Contributors
 
-`mmsafari:` [https://github.com/mmsafari](mmsafari)
+- **mmsafari**: [GitHub](https://github.com/mmsafari) · [LinkedIn](https://www.linkedin.com/in/mmsafari/)
