@@ -62,10 +62,12 @@ export const convertToISODateTime = (date: DateInput): string => {
 /**
  * Converts Jalali date string to Gregorian Date object.
  * @param {string} jalaliDate - Jalali date string in the format YYYY/MM/DD or YYYY-MM-DD.
- * @returns {Date} Gregorian Date object.
+ * @returns {Date | string} Gregorian Date object or "Invalid Date" if the date is invalid.
  */
-export const convertToGregorianDate = (jalaliDate: string): Date => {
+export const convertToGregorianDate = (jalaliDate: string): Date | string => {
 	const [year, month, day] = jalaliDate.split(/[/-]/).map(Number);
+	if (!isValidJalaliDate(year, month, day)) return "Invalid Date";
+
 	const [gYear, gMonth, gDay] = toGregorian(year, month, day);
 	return new Date(gYear, gMonth - 1, gDay); // JS months are 0-indexed
 };
@@ -73,12 +75,14 @@ export const convertToGregorianDate = (jalaliDate: string): Date => {
 /**
  * Converts Jalali date string to Gregorian date string in the format YYYY/MM/DD.
  * @param {string} jalaliDate - Jalali date string in the format YYYY/MM/DD or YYYY-MM-DD.
- * @returns {string} Gregorian date string in the format YYYY/MM/DD.
+ * @returns {string} Gregorian date string in the format YYYY/MM/DD or "Invalid Date" if the date is invalid.
  */
 export const convertToGregorianDateString = (jalaliDate: string): string => {
 	const [year, month, day] = jalaliDate.split(/[/-]/).map(Number);
+	if (!isValidJalaliDate(year, month, day)) return "Invalid Date";
+
 	const [gYear, gMonth, gDay] = toGregorian(year, month, day);
-	return `${gYear}/${gMonth.toString().padStart(2, "0")}/${gDay
+	return `${gYear}-${gMonth.toString().padStart(2, "0")}-${gDay
 		.toString()
 		.padStart(2, "0")}`;
 };
@@ -389,8 +393,8 @@ export const isBeforeDate = (first: string, second: string): boolean => {
  * @returns {boolean} True if the Jalali year is a leap year.
  */
 export const isLeapYearJalali = (jalaliYear: number): boolean => {
-	const [gy] = toGregorian(jalaliYear, 1, 1);
-	return (gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0;
+	const mod = jalaliYear > 0 ? jalaliYear % 33 : ((jalaliYear % 33) + 33) % 33;
+	return [1, 5, 9, 13, 17, 22, 26, 30].includes(mod);
 };
 
 // Define arrays for Jalali months and days
@@ -428,6 +432,40 @@ const jalaliWeekdayNamesGregorianFormat: string[] = [
 	"جمعه",
 	"شنبه",
 ];
+
+const getJalaliMonthDays = (
+	jalaliYear: number,
+	jalaliMonth: number
+): number => {
+	if (jalaliMonth < 1 || jalaliMonth > 12) return 0;
+	if (jalaliMonth <= 6) return 31;
+	if (jalaliMonth <= 11) return 30;
+	return isLeapYearJalali(jalaliYear) ? 30 : 29;
+};
+
+/**
+ * Checks if the given Jalali date is valid.
+ * @param {number} jalaliYear - Jalali year.
+ * @param {number} jalaliMonth - Jalali month.
+ * @param {number} jalaliDay - Jalali day.
+ * @returns {boolean} True if the Jalali date is valid.
+ */
+export const isValidJalaliDate = (
+	jalaliYear: number,
+	jalaliMonth: number,
+	jalaliDay: number
+): boolean => {
+	if (
+		jalaliYear < 1 ||
+		jalaliMonth < 1 ||
+		jalaliMonth > 12 ||
+		jalaliDay < 1 ||
+		jalaliDay > getJalaliMonthDays(jalaliYear, jalaliMonth)
+	) {
+		return false;
+	}
+	return true;
+};
 
 /**
  * Converts Jalali date to Gregorian date.

@@ -12,41 +12,43 @@
 
 ## Installation
 
-Using npm:
 ```bash
 npm install persidate
-```
-
-Using yarn:
-```bash
+# or
 yarn add persidate
 ```
 
+Compatible with Node.js v14+ (tested up to v22)
+
 ## Benchmark
 
-Benchmarks were executed on **Node.js v20** running on a MacBook Air M3.
-All tests were performed using **benchmark.js**.
-Each test measured `format` (converting from Gregorian to Jalali) and `parse` (converting from Jalali to Gregorian).
+Benchmarks on Node.js v20 (MacBook Air M3) with **benchmark.js** show that `persidate` is a modern, lightweight, and faster alternative to libraries like jalali-moment, dayjs, and idate.
 
-| Package       | convert to jalali (ops/sec) | convert to gregorian (ops/sec)   | Bundle size (Minified + Gzipped) | Ease of Use | Key Features |
-|---------------|-----------------|-----------------|---------------------------------|------------|--------------|
-| `persidate`     | 617,951         | **3,747,380**       | **2.2 KB**                          | **Simple API** | **Fast Jalali parsing, Lightweight, No dependencies** |
-| jalali-moment | 62,286          | 67,461          | 78.4 KB                         | ⚠️ Verbose API | Full Jalali support, Heavy, Legacy-style API |
-| dayjs         | **784,901**         | (no native Jalali) | 3 KB                           | **Simple API** | Fast formatting, Plugin-based Jalali support |
+| Package       | Jalali → Gregorian (ops/sec) | Gregorian → Jalali (ops/sec) | Bundle size (Min+Gzip) | Notes |
+|---------------|------------------------------|-------------------------------|-------------------------|-------|
+| **persidate** | **3,747,380**                | 617,951                       | **2.2 KB**              | **Fast, Lightweight, No deps** |
+| jalali-moment | 67,461                       | 62,286                        | 78.4 KB                 | Verbose API, Legacy |
+| dayjs         | (no native Jalali)           | 784,901                   | 3 KB                    | Plugin-based Jalali support |
+| idate         | 254.289                       | 346,807                          | 2.7 KB                  | Outdated, Legacy |
 
-### Why persidate?
-- **Ultra-fast** Jalali ↔ Gregorian conversions.
-- **Lightweight** and dependency-free.
-- **Code Quality:** Verified with `SonarQube Cloud`.
-- Clean and developer-friendly API.
-- Built specifically for projects that need **modern, reliable Persian date handling**.
+> Check out a small sandbox comparing persidate, dayjs, jalali-moment, and idate in tricky date conversion cases.
+> [Open Sandbox](https://codesandbox.io/p/sandbox/inspiring-johnson-p86lrj)
 
 
 
+## Features & Advantages
 
-## Available Functions
+- **Fast & Lightweight** – Ultra-optimized conversions with no dependencies.
+- **Full Jalali ↔ Gregorian Support** – Simple API for conversion, formatting, and utilities.
+- **Developer-Friendly** – Clean TypeScript API, works for both Persian and non-Persian devs.
+- **Reliable & Tested** – Verified with **SonarQube**, compatible with Node.js v14+.
+
+
+
+## Functions
 
 ### Convert
+##### Transform between Jalali and Gregorian.
 
 	• convertToStandardDateTime
 	• convertToISODateTime
@@ -55,6 +57,7 @@ Each test measured `format` (converting from Gregorian to Jalali) and `parse` (c
 	• convertToJalaliDate
 
 ### Format
+##### Display in specific formats (padded, localized).
 
 	• formatToGregorianDate
 	• formatToGregorianDateTime
@@ -62,6 +65,7 @@ Each test measured `format` (converting from Gregorian to Jalali) and `parse` (c
 	• formatToLocalizedDate
 
 ### Get
+##### Retrieve specific details (today, timestamp, etc).
 
 	• getToday
 	• getTimeFromDate
@@ -70,41 +74,20 @@ Each test measured `format` (converting from Gregorian to Jalali) and `parse` (c
 	• getTimeAgo
 
 ### Utility
+##### Miscellaneous operations (add days, compare dates).
 
 	• addDaysToDate
 	• isBeforeDate
 	• isLeapYearJalali
 
 ### Constants
+##### Static month/weekday names.
 
 	• jalaliMonthNames
 	• jalaliWeekdayNames
 
-## Function Naming Patterns
-
-The library follows these naming patterns for better consistency and developer experience:
-
-	• convert: For transforming between formats (e.g., Gregorian ↔ Jalali).
-	• format: For displaying dates in specific formats (e.g., padded, localized).
-	• get: For retrieving specific details (e.g., year, month, time).
-	• utility: For miscellaneous operations (e.g., comparisons, adding days).
-	• constants: Static arrays or objects (e.g., month and weekday names).
-
-## Features
-
-	• Convert between Shamsi (Jalali) and Gregorian (Miladi) dates.
-	• Persian formatting with month/weekday names.
-	• Utility functions for date manipulation (e.g., adding days, comparing dates).
-
-## Improvements:
-
-	1. Consistent headings: Simplifies navigation for users.
-	2. Better function categorization: Clear and concise explanation of each group.
-	3. Cleaner examples: Makes it easier for new users to understand the API.
-	4. Polished grammar and style: Improves readability and professionalism.
-
 ## Usage
-`Here's a simple example of how to use persidate in your project:`
+Here are some quick examples:
 
 ```ts
 // Convert to local ISO string
@@ -198,4 +181,4 @@ console.log(isLeapYearJalali(1403)); // true
 
 ## Contributors
 
-`mmsafari:` [https://github.com/mmsafari](mmsafari)
+- **mmsafari**: [GitHub](https://github.com/mmsafari) · [LinkedIn](https://www.linkedin.com/in/mmsafari/)
