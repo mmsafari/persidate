@@ -1,6 +1,6 @@
 {
 	"name": "persidate",
-	"version": "0.9.3",
+	"version": "0.9.7",
 	"description": "persidate is a lightweight package for converting and managing Shamsi (Jalali) and Gregorian dates in JavaScript/TypeScript.",
 	"author": "Mahdi Safari <mmsafari79@gmail.com>",
 	"license": "ISC",
@@ -29,7 +29,9 @@
 		"converter",
 		"timestamp",
 		"date-utils",
-		"date-converter"
+		"date-convert",
+		"miladi",
+		"typescript"
 	],
 	"devDependencies": {
 		"typescript": "^5.6.3"

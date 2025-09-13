@@ -20,18 +20,20 @@ yarn add persidate
 
 Compatible with Node.js v14+ (tested up to v22)
 
+>Try it in [Live Demo](https://k2xwfw.csb.app/).
+
 ## Benchmark
 
-Benchmarks on Node.js v20 (MacBook Air M3) with **benchmark.js** show that `persidate` is a modern, lightweight, and faster alternative to libraries like jalali-moment, dayjs, and idate.
+`persidate` delivers a cleaner, faster, and lighter solution for Jalali ↔ Gregorian date handling, making it a superior alternative to bulky or outdated libraries like **jalali-moment**, **dayjs**, and **idate**.
 
-| Package       | Jalali → Gregorian (ops/sec) | Gregorian → Jalali (ops/sec) | Bundle size (Min+Gzip) | Notes |
-|---------------|------------------------------|-------------------------------|-------------------------|-------|
-| **persidate** | **3,747,380**                | 617,951                       | **2.2 KB**              | **Fast, Lightweight, No deps** |
-| jalali-moment | 67,461                       | 62,286                        | 78.4 KB                 | Verbose API, Legacy |
-| dayjs         | (no native Jalali)           | 784,901                   | 3 KB                    | Plugin-based Jalali support |
-| idate         | 254.289                       | 346,807                          | 2.7 KB                  | Outdated, Legacy |
+| Package       | Bundle size (Min+Gzip) | Notes |
+|---------------|-------------------------|-------|
+| **persidate** | **2.3 KB**              | **Fast, Lightweight, No deps** |
+| jalali-moment | 78.4 KB                 | Verbose API, Legacy |
+| dayjs         | 3 KB                    | Plugin-based Jalali support |
+| idate         | 2.7 KB                  | Outdated, Legacy |
 
-> Check out a small sandbox comparing persidate, dayjs, jalali-moment, and idate in tricky date conversion cases.
+> Check out a small sandbox comparing **persidate**, dayjs, jalali-moment, and idate in tricky date conversion cases.
 > [Open Sandbox](https://codesandbox.io/p/sandbox/inspiring-johnson-p86lrj)
 
 

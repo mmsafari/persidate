@@ -474,57 +474,68 @@ export const isValidJalaliDate = (
  * @param {number} jd - Jalali day.
  * @returns {[number, number, number]} Gregorian year, month, and day.
  */
-const toGregorian = (
-	jy: number,
-	jm: number,
-	jd: number
-): [number, number, number] => {
-	let gy = jy <= 979 ? 621 : 1600;
-	jy -= jy <= 979 ? 0 : 979;
+const toGregorian = (jy: number, jm: number, jd: number): [number, number, number] => {
+  let gy: number;
+  if (jy > 979) {
+    gy = 1600;
+    jy -= 979;
+  } else {
+    gy = 621;
+  }
 
-	let days =
-		365 * jy +
-		Math.floor(jy / 33) * 8 +
-		Math.floor(((jy % 33) + 3) / 4) +
-		78 +
-		jd +
-		(jm < 7 ? (jm - 1) * 31 : (jm - 7) * 30 + 186);
+  let days =
+    365 * jy +
+    Math.floor(jy / 33) * 8 +
+    Math.floor(((jy % 33) + 3) / 4) +
+    78 +
+    jd +
+    (jm < 7 ? (jm - 1) * 31 : (jm - 7) * 30 + 186);
 
-	gy += 400 * Math.floor(days / 146097);
-	days %= 146097;
+  gy += 400 * Math.floor(days / 146097);
+  days %= 146097;
 
-	if (days > 36524) {
-		gy += 100 * Math.floor(--days / 36524);
-		days %= 36524;
-		if (days >= 365) days++;
-	}
+  let leap = true;
+  if (days > 36524) {
+    gy += 100 * Math.floor(--days / 36524);
+    days %= 36524;
+    if (days >= 365) {
+      days++;
+    } else {
+      leap = false;
+    }
+  }
 
-	gy += 4 * Math.floor(days / 1461);
-	days %= 1461;
+  gy += 4 * Math.floor(days / 1461);
+  days %= 1461;
 
-	gy += Math.floor((days - 1) / 365);
-	if (days > 365) days = (days - 1) % 365;
+  if (days > 365) {
+    gy += Math.floor((days - 1) / 365);
+    days = (days - 1) % 365;
+    leap = false;
+  }
 
-	let gd = days + 1;
-	const sal_a = [
-		0,
-		31,
-		(gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0 ? 29 : 28,
-		31,
-		30,
-		31,
-		30,
-		31,
-		31,
-		30,
-		31,
-		30,
-		31,
-	];
-	let gm = 0;
-	for (; gm < 13; gm++) {
-		if (gd <= sal_a[gm]) break;
-		gd -= sal_a[gm];
-	}
-	return [gy, gm, gd];
+  let gd = days + 1;
+  const sal_a = [
+    0,
+    31,
+    leap ? 29 : 28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31,
+  ];
+
+  let gm = 0;
+  for (gm = 0; gm < 13; gm++) {
+    if (gd <= sal_a[gm]) break;
+    gd -= sal_a[gm];
+  }
+
+  return [gy, gm, gd];
 };
