@@ -1,7 +1,7 @@
 import { parseArabic } from "./parse-arabic";
 declare global {
 	interface Date {
-		addDaysToDate(days: number): Date;
+		shiftDateByDays(days: number): Date;
 	}
 }
 
@@ -119,7 +119,7 @@ export const convertToJalaliDate = (
 		| "dayMonth"
 		| "dayMonthYear"
 		| "weekdayDayMonth"
-		| "weekdayDayMonthYear"
+		| "weekdayDayMonthYear",
 ): string => {
 	const parsedDate =
 		typeof date === "number" || typeof date === "string"
@@ -127,7 +127,7 @@ export const convertToJalaliDate = (
 			: date;
 
 	const parts: any = parseArabic(parsedDate.toLocaleDateString("fa-IR")).split(
-		/[-/]/
+		/[-/]/,
 	);
 	const [year, month, day] = parts;
 	const weekday = jalaliWeekdayNamesGregorianFormat[parsedDate.getDay()];
@@ -180,7 +180,7 @@ export const formatToGregorianDate = (date: number | Date): string => {
  */
 export const formatToGregorianDateTime = (
 	date: number | Date,
-	time: string
+	time: string,
 ): string => {
 	const formattedDate = formatToGregorianDate(date);
 	return `${formattedDate}T${time}`;
@@ -197,7 +197,7 @@ export const formatToJalaliDatePadded = (date: DateInput): string => {
 			? new Date(date)
 			: date;
 	const parts = parseArabic(formattedDate.toLocaleDateString(locale)).split(
-		/[/-]/
+		/[/-]/,
 	);
 	let month = parts[1]?.length < 2 ? `0${parts[1]}` : parts[1];
 	let day = parts[2]?.length < 2 ? `0${parts[2]}` : parts[2];
@@ -213,7 +213,7 @@ export const formatToJalaliDatePadded = (date: DateInput): string => {
  */
 export const formatToLocalizedDate = (
 	date: DateInput,
-	format: ISupportedDateFormats
+	format: ISupportedDateFormats,
 ): string | null => {
 	if (!date) return null;
 
@@ -272,7 +272,7 @@ export const getToday = (): string => {
  * @returns {string} Time in the format HH:mm.
  */
 export const getTimeFromDate = (
-	date: string | number | Date = new Date()
+	date: string | number | Date = new Date(),
 ): string => {
 	const dateObj =
 		typeof date === "string" || typeof date === "number"
@@ -355,24 +355,114 @@ export const getTimeAgo = (date: DateInput, suffix: string = "پیش"): string =
 };
 
 /**
- * Adds days to the Date object.
- * @param {number} days - Number of days to add.
- * @returns {Date} Updated date with added days.
+ * Calculate years between two dates
+ * @param {DateInput} firstDate - The first date, either a Date object or a string parsable by `new Date()`.
+ * @param {DateInput} secondDate - The second date, either a Date object or a string parsable by `new Date()`.
+ * @returns {number} Number of years between this dates
  */
-DT.addDaysToDate = function (days: number): Date {
+export const getYearDurationByDates = (
+	firstDate: DateInput,
+	secondDate: DateInput,
+): number => {
+	const normalizedFirstDate =
+		typeof firstDate === "string" || typeof firstDate === "number"
+			? new Date(firstDate)
+			: firstDate;
+	const normalizedSecondDate =
+		typeof secondDate === "string" || typeof secondDate === "number"
+			? new Date(secondDate)
+			: secondDate;
+
+	const isSecondDateBeforeFirstDate = isBeforeDate(
+		formatToGregorianDate(normalizedSecondDate),
+		formatToGregorianDate(normalizedFirstDate),
+	);
+	const differenceYear =
+		normalizedSecondDate.getFullYear() - normalizedFirstDate.getFullYear();
+
+	let years = differenceYear < 0 ? Math.abs(differenceYear) : differenceYear;
+
+	if (isSecondDateBeforeFirstDate) {
+		years--;
+	}
+
+	if (
+		normalizedSecondDate.getMonth() < normalizedFirstDate.getMonth() ||
+		(normalizedSecondDate.getMonth() === normalizedFirstDate.getMonth() &&
+			normalizedSecondDate.getDate() < normalizedFirstDate.getDate())
+	) {
+		years--;
+	}
+
+	return years;
+};
+
+/**
+ * Shifts the date by a given number of days.
+ * - Positive numbers move the date forward
+ * - Negative numbers move the date backward
+ * @param {number} days - Number of days to shift (can be negative).
+ * @returns {Date} A new Date instance with the shifted value.
+ */
+DT.shiftDateByDays = function (days: number): Date {
 	const date = new Date(this.valueOf());
 	date.setDate(date.getDate() + days);
 	return date;
 };
 
 /**
- * Adds a specific number of days to the given date.
+ * Shifts the given date by a number of days.
  * @param {Date} date - Input date.
- * @param {number} daysCount - Number of days to add.
- * @returns {Date} Updated date.
+ * @param {number} daysCount - Number of days to shift (can be negative).
+ * @returns {Date} A new Date instance with the shifted value.
  */
-export const addDaysToDate = (date: Date, daysCount: number): Date => {
-	return date.addDaysToDate(daysCount);
+export const shiftDateByDays = (date: Date, daysCount: number): Date => {
+	return date.shiftDateByDays(daysCount);
+};
+
+/**
+ * Shifts a date by calendar years, based on the selected calendar system.
+ * This function changes **only the year** and keeps the month and day
+ * the same. If the target year does not have the same day in that month,
+ * the day is clamped to the last valid day of that month.
+ *
+ * - For "gregorian": uses the Gregorian calendar
+ * - For "jalali": uses the Jalali (Persian) calendar
+ *
+ * No day-based calculations are performed.
+ *
+ * @param {Date} date - The input Gregorian Date object.
+ * @param {number} yearsCount - Number of years to shift (negative for past, positive for future).
+ * @param {"gregorian" | "jalali"} [calendar="gregorian"] - Calendar system to apply the year shift.
+ * @returns {Date} A new Gregorian Date instance with the shifted year.
+ */
+
+export const shiftDateByYears = (
+	date: Date,
+	yearsCount: number,
+	calendar: "gregorian" | "jalali" = "gregorian",
+): Date => {
+	if (calendar === "gregorian") {
+		const y = date.getFullYear() + yearsCount;
+		const m = date.getMonth();
+		const d = date.getDate();
+
+		const result = new Date(date);
+		result.setFullYear(y, m, 1);
+
+		const maxDay = new Date(y, m + 1, 0).getDate();
+		result.setDate(Math.min(d, maxDay));
+
+		return result;
+	}
+
+	const [y, m, d] = convertToJalaliDate(date).split("-").map(Number);
+
+	return new Date(
+		convertToGregorianDate(
+			`${y + yearsCount}-${m}-${Math.min(d, getJalaliMonthDays(y + yearsCount, m))}`,
+		) as Date,
+	);
 };
 
 /**
@@ -435,7 +525,7 @@ const jalaliWeekdayNamesGregorianFormat: string[] = [
 
 const getJalaliMonthDays = (
 	jalaliYear: number,
-	jalaliMonth: number
+	jalaliMonth: number,
 ): number => {
 	if (jalaliMonth < 1 || jalaliMonth > 12) return 0;
 	if (jalaliMonth <= 6) return 31;
@@ -453,7 +543,7 @@ const getJalaliMonthDays = (
 export const isValidJalaliDate = (
 	jalaliYear: number,
 	jalaliMonth: number,
-	jalaliDay: number
+	jalaliDay: number,
 ): boolean => {
 	if (
 		jalaliYear < 1 ||
@@ -474,68 +564,58 @@ export const isValidJalaliDate = (
  * @param {number} jd - Jalali day.
  * @returns {[number, number, number]} Gregorian year, month, and day.
  */
-const toGregorian = (jy: number, jm: number, jd: number): [number, number, number] => {
-  let gy: number;
-  if (jy > 979) {
-    gy = 1600;
-    jy -= 979;
-  } else {
-    gy = 621;
-  }
+const toGregorian = (
+	jy: number,
+	jm: number,
+	jd: number,
+): [number, number, number] => {
+	let gy: number;
+	if (jy > 979) {
+		gy = 1600;
+		jy -= 979;
+	} else {
+		gy = 621;
+	}
 
-  let days =
-    365 * jy +
-    Math.floor(jy / 33) * 8 +
-    Math.floor(((jy % 33) + 3) / 4) +
-    78 +
-    jd +
-    (jm < 7 ? (jm - 1) * 31 : (jm - 7) * 30 + 186);
+	let days =
+		365 * jy +
+		Math.floor(jy / 33) * 8 +
+		Math.floor(((jy % 33) + 3) / 4) +
+		78 +
+		jd +
+		(jm < 7 ? (jm - 1) * 31 : (jm - 7) * 30 + 186);
 
-  gy += 400 * Math.floor(days / 146097);
-  days %= 146097;
+	gy += 400 * Math.floor(days / 146097);
+	days %= 146097;
 
-  let leap = true;
-  if (days > 36524) {
-    gy += 100 * Math.floor(--days / 36524);
-    days %= 36524;
-    if (days >= 365) {
-      days++;
-    } else {
-      leap = false;
-    }
-  }
+	let leap = true;
+	if (days > 36524) {
+		gy += 100 * Math.floor(--days / 36524);
+		days %= 36524;
+		if (days >= 365) {
+			days++;
+		} else {
+			leap = false;
+		}
+	}
 
-  gy += 4 * Math.floor(days / 1461);
-  days %= 1461;
+	gy += 4 * Math.floor(days / 1461);
+	days %= 1461;
 
-  if (days > 365) {
-    gy += Math.floor((days - 1) / 365);
-    days = (days - 1) % 365;
-    leap = false;
-  }
+	if (days > 365) {
+		gy += Math.floor((days - 1) / 365);
+		days = (days - 1) % 365;
+		leap = false;
+	}
 
-  let gd = days + 1;
-  const sal_a = [
-    0,
-    31,
-    leap ? 29 : 28,
-    31,
-    30,
-    31,
-    30,
-    31,
-    31,
-    30,
-    31,
-    30,
-    31,
-  ];
+	let gd = days + 1;
+	const sal_a = [0, 31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-  let gm = 0;
-  for (gm = 0; gm < 13; gm++) {
-    if (gd <= sal_a[gm]) break;
-    gd -= sal_a[gm];
-  }
+	let gm = 0;
+	for (gm = 0; gm < 13; gm++) {
+		if (gd <= sal_a[gm]) break;
+		gd -= sal_a[gm];
+	}
 
-  return [gy, gm, gd];
+	return [gy, gm, gd];
 };

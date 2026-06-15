@@ -46,7 +46,6 @@ Compatible with Node.js v14+ (tested up to v22)
 - **Reliable & Tested** – Verified with **SonarQube**, compatible with Node.js v14+.
 
 
-
 ## Functions
 
 ### Convert
@@ -74,11 +73,13 @@ Compatible with Node.js v14+ (tested up to v22)
 	• getDaysFromNow
 	• getJalaliTimeStamp
 	• getTimeAgo
+	• getYearDurationByDates
 
 ### Utility
 ##### Miscellaneous operations (add days, compare dates).
 
-	• addDaysToDate
+	• shiftDateByDays
+	• shiftDateByYears
 	• isBeforeDate
 	• isLeapYearJalali
 
@@ -167,10 +168,26 @@ console.log(getTimeAgo("2025-07-20"));
 console.log(getTimeAgo(1697625600000));
 
 
-// Add N days to a date
+// Years difference between two date
+const firstDate = new Date();
+const secondDate = '2015-10-17';
+console.log(getYearDurationByDates(firstDate, secondDate)); // 10
+
+const date1 = '2009-05-15';
+const date2 = '2025-02-18';
+console.log(getYearDurationByDates(date1, date2)); // 15
+
+
+
+// Shift N days to a date (positive for future, negative for past)
 const today = new Date();
-const plusTen = addDaysToDate(today, 10);
+const plusTen = shiftDateByDays(today, 10);
 console.log(plusTen);
+
+// Shift N years to a date (positive for future, negative for past)
+const date = new Date();
+const plusTenYears = shiftDateByYears(date, -1, "jalali"); // third argument is optional (default: "gregorian")
+console.log(plusTenYears);
 
 // Compare two dates
 const date1 = '2024-10-18';
