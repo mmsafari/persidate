@@ -3,8 +3,9 @@
     "target": "es2017",
     "module": "CommonJS",
     "lib": ["es2017", "dom"],
-    "declaration": true,
+    "rootDir": "./src",
     "outDir": "./dist",
+    "declaration": true,
     "strict": true
   },
   "include": ["src/**/*.ts"],
