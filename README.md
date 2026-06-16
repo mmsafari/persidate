@@ -20,7 +20,7 @@ yarn add persidate
 
 Compatible with Node.js v14+ (tested up to v22)
 
->Try it in [Live Demo](https://k2xwfw.csb.app/).
+>Try it in [Live Demo](https://mmsafari.github.io/persidate-demo/).
 
 ## Benchmark
 
