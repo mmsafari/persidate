@@ -4,10 +4,19 @@
 	"description": "persidate is a lightweight package for converting and managing Shamsi (Jalali) and Gregorian dates in JavaScript/TypeScript.",
 	"author": "Mahdi Safari <mmsafari79@gmail.com>",
 	"license": "ISC",
-	"main": "dist/index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
+	"main": "dist/cjs/index.js",
+	"module": "dist/esm/index.js",
+	"types": "dist/types/index.d.ts",
+	"sideEffects": false,
+	"files": [
+		"dist"
+	],
+	"size-limit": [
+		{
+			"path": "dist/esm/index.js",
+			"limit": "10 kB"
+		}
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/mmsafari/persidate"
@@ -33,7 +42,22 @@
 		"miladi",
 		"typescript"
 	],
+	"scripts": {
+		"clean": "rm -rf dist",
+		"minify:esm": "esbuild dist/esm/index.js --minify --outfile=dist/esm/index.js",
+		"minify:cjs": "esbuild dist/cjs/index.js --minify --outfile=dist/cjs/index.js",
+		"build:esm": "tsc -p tsconfig.esm.json",
+		"build:cjs": "tsc -p tsconfig.cjs.json",
+		"minify": "node minify.mjs",
+		"build": "npm run clean && npm run build:esm && npm run build:cjs && npm run minify",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"release": "node release.js",
+		"size": "size-limit"
+	},
 	"devDependencies": {
-		"typescript": "^6.0.3"
+		"@size-limit/preset-small-lib": "^13.0.1",
+		"esbuild": "^0.28.1",
+		"size-limit": "^13.0.1",
+		"typescript": "^7.0.2"
 	}
 }
